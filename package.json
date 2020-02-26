@@ -1,0 +1,38 @@
+{
+  "name": "net-pix-with-vue-and-graphql",
+  "version": "1.0.0",
+  "description": "A full-stack web application for sharing images.",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon server.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently --names \"server,client\" \"npm run server --silent\" \"npm run client --silent\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/placideirandora/net-pix-with-vue-and-graphql.git"
+  },
+  "keywords": [
+    "VueJS",
+    "GraphQL"
+  ],
+  "author": "Placide IRANDORA",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/placideirandora/net-pix-with-vue-and-graphql/issues"
+  },
+  "homepage": "https://github.com/placideirandora/net-pix-with-vue-and-graphql#readme",
+  "dependencies": {
+    "apollo-server": "^2.0.0-rc.7",
+    "bcrypt": "^3.0.0",
+    "dotenv": "^6.0.0",
+    "graphql": "^0.13.2",
+    "jsonwebtoken": "^8.3.0",
+    "md5": "^2.2.1",
+    "mongoose": "^5.2.6"
+  },
+  "devDependencies": {
+    "concurrently": "^3.6.0",
+    "nodemon": "^1.18.1"
+  }
+}
