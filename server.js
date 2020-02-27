@@ -1,4 +1,19 @@
 const { ApolloServer, gql } = require("apollo-server");
+const mongoose = require("mongoose");
+require("dotenv").config({ path: "variables.env" });
+
+// Database connection
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("Database Connected");
+  })
+  .catch(err => {
+    console.error("Database Not Connected Due To: ", err);
+  });
 
 // Dummy data
 const todos = [
@@ -18,21 +33,21 @@ const typeDefs = gql`
   }
 
   type Mutation {
-      addTodos(task: String, completed: Boolean): Todo
+    addTodos(task: String, completed: Boolean): Todo
   }
 `;
 
 // Resolve the queries and mutations
 const resolvers = {
   Query: {
-    getTodos: () => todos,
+    getTodos: () => todos
   },
   Mutation: {
-      addTodos: (_, { task, completed }) => {
-          const todo = { task: task, completed: completed };
-          todos.push(todo);
-          return todo;
-      }
+    addTodos: (_, { task, completed }) => {
+      const todo = { task: task, completed: completed };
+      todos.push(todo);
+      return todo;
+    }
   }
 };
 
