@@ -8,7 +8,6 @@ A full-stack web application for sharing images.
 - **VueX** - State Management
 - **Vue Apollo** - GraphQL Client
 - **NodeJS** - JavaScript Run-time Environment
-- **ExpressJS** - Web Framework
 - **Apollo Server 2** - GraphQL Server
 - **MongoDB** - Document-Oriented NoSQL Language
 
