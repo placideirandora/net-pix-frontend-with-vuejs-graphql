@@ -1,6 +1,11 @@
-const { ApolloServer, gql } = require("apollo-server");
-const mongoose = require("mongoose");
-require("dotenv").config({ path: "variables.env" });
+const { ApolloServer, gql } = require('apollo-server');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const User = require('./models/user');
+const Post = require('./models/post');
+
+// Configure environment variables
+dotenv.config({ path: 'variables.env' });
 
 // Database connection
 mongoose
@@ -9,16 +14,16 @@ mongoose
     useUnifiedTopology: true
   })
   .then(() => {
-    console.log("Database Connected");
+    console.log('Database Connected');
   })
   .catch(err => {
-    console.error("Database Not Connected Due To: ", err);
+    console.error('Database Not Connected Due To: ', err);
   });
 
 // Dummy data
 const todos = [
-  { task: "Read Some Books", completed: false },
-  { task: "Play Billiards", completed: true }
+  { task: 'Read Some Books', completed: false },
+  { task: 'Play Billiards', completed: true }
 ];
 
 // Define the types
@@ -52,7 +57,11 @@ const resolvers = {
 };
 
 // Initialize the Apollo Server
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: { User, Post }
+});
 
 // Start the server
 server.listen(5000).then(({ url }) => {
