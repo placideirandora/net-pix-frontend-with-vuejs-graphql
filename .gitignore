@@ -68,3 +68,6 @@ typings/
 
 # Lock file
 package-lock.json
+
+# Environment variables
+variables.env
