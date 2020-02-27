@@ -1,8 +1,14 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const User = require('./models/user');
-const Post = require('./models/post');
+const fs = require('fs');
+const path = require('path');
+const User = require('./models/User');
+const Post = require('./models/Post');
+
+// Read the GraphQL file and assign the defined types
+const filePath = path.join(__dirname, 'typeDefs.gql');
+const typeDefs = fs.readFileSync(filePath, 'utf-8');
 
 // Configure environment variables
 dotenv.config({ path: 'variables.env' });
@@ -20,46 +26,9 @@ mongoose
     console.error('Database Not Connected Due To: ', err);
   });
 
-// Dummy data
-const todos = [
-  { task: 'Read Some Books', completed: false },
-  { task: 'Play Billiards', completed: true }
-];
-
-// Define the types
-const typeDefs = gql`
-  type Todo {
-    task: String
-    completed: Boolean
-  }
-
-  type Query {
-    getTodos: [Todo]
-  }
-
-  type Mutation {
-    addTodos(task: String, completed: Boolean): Todo
-  }
-`;
-
-// Resolve the queries and mutations
-const resolvers = {
-  Query: {
-    getTodos: () => todos
-  },
-  Mutation: {
-    addTodos: (_, { task, completed }) => {
-      const todo = { task: task, completed: completed };
-      todos.push(todo);
-      return todo;
-    }
-  }
-};
-
 // Initialize the Apollo Server
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
   context: { User, Post }
 });
 
