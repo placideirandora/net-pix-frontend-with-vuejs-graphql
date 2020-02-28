@@ -13,6 +13,27 @@ A full-stack web application for sharing images.
 
 ## GETTING STARTED
 
+### Set Up MongoDB Atlas (cloud option)
+```
+$ Visit https://www.mongodb.com/cloud
+```
+
+### Download And Install MongoDB (local option)
+```
+$ For Mac, visit https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/ 
+```
+```
+$ For Windows, visit https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+```
+```
+$ For Linux, visit https://docs.mongodb.com/manual/administration/install-on-linux/
+```
+
+### Visualize MongoDB (optional)
+```
+$ Download and install, MongoDB Compass at https://www.mongodb.com/products/compass
+```
+
 ### Clone The Project
 
 ```
