@@ -10,6 +10,20 @@ module.exports = {
       }
       const newUser = await new User({ username, email, password }).save();
       return newUser;
+    },
+    addPost: async (
+      _,
+      { title, imageUrl, categories, description, creatorId },
+      { Post }
+    ) => {
+      const newPost = await new Post({
+        title,
+        imageUrl,
+        categories,
+        description,
+        createdBy: creatorId
+      }).save();
+      return newPost;
     }
   }
 };
