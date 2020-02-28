@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const User = require('./models/User');
 const Post = require('./models/Post');
+const resolvers = require('./resolvers');
 
 // Read the GraphQL file and assign the defined types
 const filePath = path.join(__dirname, 'typeDefs.gql');
@@ -29,6 +30,7 @@ mongoose
 // Initialize the Apollo Server
 const server = new ApolloServer({
   typeDefs,
+  resolvers,
   context: { User, Post }
 });
 
