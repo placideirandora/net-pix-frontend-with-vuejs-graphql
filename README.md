@@ -37,5 +37,5 @@ $ Download and install, MongoDB Compass at https://www.mongodb.com/products/comp
 ### Clone The Project
 
 ```
-$ git clone https://github.com/placideirandora/net-pix-with-vue-and-graphql
+$ git clone https://github.com/placideirandora/net-pix-with-vuejs-nodejs-and-graphql
 ```
