@@ -1,4 +1,4 @@
-# Define user 
+# Define user
 type User {
   _id: ID
   username: String! @unique
@@ -9,7 +9,7 @@ type User {
   favorites: [Post]
 }
 
-# Define post 
+# Define post
 type Post {
   title: String!
   imageUrl: String!
@@ -31,5 +31,10 @@ type Message {
 
 # Define root query
 type Query {
-    getUsers: [User]
+  getUsers: [User]
+}
+
+# Define mutation for user registration
+type Mutation {
+  registerUser(username: String!, email: String!, password: String!): User!
 }
