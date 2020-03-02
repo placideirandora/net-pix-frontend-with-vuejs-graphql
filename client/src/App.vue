@@ -1,7 +1,8 @@
 <template>
   <v-app class="app">
-    <v-toolbar fixed color="primary" dark class="app__toolbar">
-      <v-app-bar-nav-icon />
+    <v-toolbar fixed dark class="app__toolbar" style="background: #004385;">
+      <v-app-bar-nav-icon @click="toggleSideNav" class="ml-1 mr-4" />
+      <!-- Implement The Navigation Drawer -->
       <v-toolbar-title class="hidden-xs-only title">
         <router-link to="/" tag="span" class="app__router">NETPIX</router-link>
       </v-toolbar-title>
@@ -18,10 +19,9 @@
       <v-spacer />
       <v-toolbar-items class="hidden-xs-only">
         <v-btn
-          color="primary"
-          flat
-          v-for="item in horizontalNavItems"
-          :key="item.title"
+          style="background: #004385;"
+          v-for="(item, index) in horizontalNavItems"
+          :key="index"
           :to="item.link"
         >
           <v-icon left class="hidden-xs-only">{{ item.icon }}</v-icon>
@@ -40,13 +40,30 @@
 <script>
 export default {
   name: 'App',
+  data() {
+    return {
+      sideNav: false
+    };
+  },
   computed: {
-    horizontalNavItems: () => {
+    horizontalNavItems() {
       return [
         { icon: 'chat', title: 'Posts', link: '/posts' },
         { icon: 'lock_open', title: 'Sign In', link: '/signin' },
         { icon: 'create', title: 'Sign Up', link: '/signup' }
       ];
+    },
+    sideNavItems() {
+      return [
+        { icon: 'chat', title: 'Posts', link: '/posts' },
+        { icon: 'lock_open', title: 'Sign In', link: '/signin' },
+        { icon: 'create', title: 'Sign Up', link: '/signup' }
+      ];
+    }
+  },
+  methods: {
+    toggleSideNav() {
+      this.sideNav = !this.sideNav;
     }
   }
 };
@@ -54,6 +71,7 @@ export default {
 
 <style lang="scss">
 .app {
+  background: #f9f9f9;
   &__toolbar {
     max-height: 4.2rem;
   }
