@@ -7,6 +7,7 @@ export const queries = {
         _id
         title
         description
+        imageUrl
       }
     }
   `
