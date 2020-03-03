@@ -14,14 +14,13 @@ const defaultOptions = {
   httpEndpoint
 };
 
-// Call this in the Vue app file
-export function createProvider(options = {}) {
-  // Create apollo client
-  const { apolloClient } = createApolloClient({
-    ...defaultOptions,
-    ...options
-  });
+// Create apollo client
+export const { apolloClient } = createApolloClient({
+  ...defaultOptions
+});
 
+// Call this in the Vue app file
+export const createProvider = () => {
   // Create vue apollo provider
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
@@ -41,4 +40,4 @@ export function createProvider(options = {}) {
   });
 
   return apolloProvider;
-}
+};

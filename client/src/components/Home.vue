@@ -1,34 +1,32 @@
 <template>
   <v-container class="home">
-    <ApolloQuery :query="getPostsQuery">
-      <template slot-scope="{ result: { error, loading, data } }">
-        <div v-if="error">Error: {{ error.message }}</div>
-        <div v-else-if="loading">Loading</div>
-        <div v-else-if="data.getPosts.length">
-          <v-flex xs12>
-            <v-carousel v-bind="{ 'cycle': true }" interval="4000">
-              <v-carousel-item v-for="post in data.getPosts" :key="post._id" :src="post.imageUrl">
-                <h2 class="home__title">{{ post.title }}</h2>
-              </v-carousel-item>
-            </v-carousel>
-          </v-flex>
-        </div>
-        <div v-else-if="!data.getPosts.length">No Posts</div>
-      </template>
-    </ApolloQuery>
+    <div v-if="posts.length">
+      <v-flex xs12>
+        <v-carousel v-bind="{ 'cycle': true }" interval="4000">
+          <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
+            <h2 class="home__title">{{ post.title }}</h2>
+          </v-carousel-item>
+        </v-carousel>
+      </v-flex>
+    </div>
   </v-container>
 </template>
 
 <script>
-import { queries } from '../graphql/queries';
-
 export default {
   name: 'Home',
-  data() {
-    return {
-      posts: [],
-      getPostsQuery: queries.getPosts
-    };
+  computed: {
+    posts() {
+      return this.$store.getters.posts;
+    }
+  },
+  methods: {
+    handleGetCarouselPosts() {
+      this.$store.dispatch('getPosts');
+    }
+  },
+  created() {
+    this.handleGetCarouselPosts();
   }
 };
 </script>
