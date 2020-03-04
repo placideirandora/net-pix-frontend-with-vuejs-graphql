@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { apolloClient } from '../graphql/vue-apollo';
-import { GetPosts } from '../graphql/queries';
+import { GET_POSTS } from '../graphql/queries';
 
 Vue.use(Vuex);
 
@@ -27,7 +27,7 @@ export default new Vuex.Store({
       commit('setLoading', true);
       apolloClient
         .query({
-          query: GetPosts
+          query: GET_POSTS
         })
         .then(({ data: { getPosts } }) => {
           commit('setPosts', getPosts);
