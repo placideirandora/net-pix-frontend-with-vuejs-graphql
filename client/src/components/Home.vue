@@ -1,6 +1,10 @@
 <template>
   <v-container class="home">
-    <div v-if="posts.length">
+    <div v-if="loading" class="home__loader">
+      <ContentLoader />
+    </div>
+    <h1 v-else-if="!loading && error" class="home__error">{{ error }}</h1>
+    <div v-else-if="!loading && posts.length > 0">
       <v-flex xs12>
         <v-carousel v-bind="{ 'cycle': true }" interval="4000">
           <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
@@ -9,16 +13,21 @@
         </v-carousel>
       </v-flex>
     </div>
+    <div v-else>No Posts</div>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import ContentLoader from '../components/Helpers/ContentLoader';
+
 export default {
   name: 'Home',
+  components: {
+    ContentLoader
+  },
   computed: {
-    posts() {
-      return this.$store.getters.posts;
-    }
+    ...mapGetters(['loading', 'posts', 'error'])
   },
   methods: {
     handleGetCarouselPosts() {
@@ -43,6 +52,16 @@ export default {
     left: 0;
     right: 0;
     text-transform: uppercase;
+  }
+
+  &__loader {
+    margin-top: 6rem;
+  }
+
+  &__error {
+    color: #F71735;
+    text-align: center;
+    margin-top: 15rem;
   }
 }
 </style>

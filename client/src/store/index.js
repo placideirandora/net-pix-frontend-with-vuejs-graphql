@@ -7,29 +7,42 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    posts: []
+    posts: [],
+    loading: false,
+    error: ''
   },
   mutations: {
     setPosts: (state, payload) => {
       state.posts = payload;
+    },
+    setLoading: (state, payload) => {
+      state.loading = payload;
+    },
+    setError: (state, payload) => {
+      state.error = payload;
     }
   },
   actions: {
     getPosts: ({ commit }) => {
+      commit('setLoading', true);
       apolloClient
         .query({
           query: queries.getPosts
         })
         .then(({ data: { getPosts } }) => {
           commit('setPosts', getPosts);
+          commit('setLoading', false);
         })
         .catch(({ message }) => {
-          console.log('Error: ', message);
+          commit('setLoading', false);
+          commit('setError', message);
         });
     }
   },
   getters: {
-    posts: state => state.posts
+    posts: state => state.posts,
+    loading: state => state.loading,
+    error: state => state.error
   },
   modules: {}
 });
