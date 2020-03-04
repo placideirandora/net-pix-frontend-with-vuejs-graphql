@@ -1,14 +1,12 @@
 import gql from 'graphql-tag';
 
-export const queries = {
-  getPosts: gql`
-    query {
-      getPosts {
-        _id
-        title
-        description
-        imageUrl
-      }
+export const GetPosts = gql`
+  query {
+    getPosts {
+      _id
+      title
+      description
+      imageUrl
     }
-  `
-};
+  }
+`;
