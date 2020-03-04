@@ -46,4 +46,6 @@ type Mutation {
   ): Post!
 
   registerUser(username: String!, email: String!, password: String!): User!
+
+  loginUser(username: String!, password: String!): User!
 }
