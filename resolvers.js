@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const createToken = require('./helpers/generateToken');
 
 module.exports = {
   Query: {
@@ -21,7 +22,8 @@ module.exports = {
       }
 
       const newUser = await new User({ username, email, password }).save();
-      return newUser;
+
+      return { token: createToken(newUser, process.env.SECRET, '1hr') };
     },
     loginUser: async (_, { username, password }, { User }) => {
       const user = await User.findOne({ username });
@@ -36,7 +38,7 @@ module.exports = {
         throw new Error('Invalid password');
       }
 
-      return user;
+      return { token: createToken(user, process.env.SECRET, '1hr') };
     },
     addPost: async (
       _,

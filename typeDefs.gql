@@ -30,6 +30,11 @@ type Message {
   messageUser: User!
 }
 
+# Define token
+type Token {
+  token: String!
+}
+
 # Define queries
 type Query {
   getPosts: [Post]!
@@ -45,7 +50,7 @@ type Mutation {
     creatorId: ID!
   ): Post!
 
-  registerUser(username: String!, email: String!, password: String!): User!
+  registerUser(username: String!, email: String!, password: String!): Token
 
-  loginUser(username: String!, password: String!): User!
+  loginUser(username: String!, password: String!): Token
 }
