@@ -33,7 +33,7 @@ mongoose
 const getUser = async token => {
   if (token) {
     try {
-      const user = await jwt.verify(token, process.env.SECRET);
+      return await jwt.verify(token.slice(7), process.env.SECRET);
       console.log('Payload: ', user);
     } catch (error) {
       throw new AuthenticationError(
@@ -48,7 +48,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    const token = req.headers.authorization.slice(7);
+    const token = req.headers.authorization;
     return { User, Post, currentUser: await getUser(token) };
   }
 });

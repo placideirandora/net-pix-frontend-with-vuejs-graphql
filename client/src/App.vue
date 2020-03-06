@@ -1,6 +1,6 @@
 <template>
   <v-app class="app">
-    <v-toolbar fixed dark class="app__toolbar" style="background: #004385;">
+    <v-toolbar fixed dark class="app__toolbar" :color="colors.primary">
       <v-app-bar-nav-icon @click="toggleSideNav" class="ml-1 mr-4" />
       <!-- Implement The Navigation Drawer -->
       <v-toolbar-title class="hidden-xs-only title">
@@ -10,8 +10,7 @@
       <v-text-field
         flex
         prepend-icon="search"
-        placeholder="Search posts"
-        color="accent"
+        placeholder="SEARCH POSTS"
         single-line
         high-details
         class="mt-4"
@@ -19,7 +18,7 @@
       <v-spacer />
       <v-toolbar-items class="hidden-xs-only">
         <v-btn
-          style="background: #004385;"
+          color="#004385"
           v-for="(item, index) in horizontalNavItems"
           :key="index"
           :to="item.link"
@@ -48,11 +47,14 @@ export default {
     };
   },
   computed: {
+    colors() {
+      return this.$store.getters.colors;
+    },
     horizontalNavItems() {
       return [
-        { icon: 'chat', title: 'Posts', link: '/posts' },
-        { icon: 'lock_open', title: 'Sign In', link: '/signin' },
-        { icon: 'create', title: 'Sign Up', link: '/signup' }
+        { icon: 'mdi-post', title: 'Posts', link: '/posts' },
+        { icon: 'mdi-login-variant', title: 'Sign In', link: '/signin' },
+        { icon: 'mdi-account-plus', title: 'Sign Up', link: '/signup' }
       ];
     },
     sideNavItems() {
@@ -73,7 +75,6 @@ export default {
 
 <style lang="scss">
 .app {
-  background: #f9f9f9;
   &__toolbar {
     max-height: 4.2rem;
   }
@@ -83,7 +84,7 @@ export default {
 
   .fade-enter-active,
   .fade-leave-active {
-    transition-property: opacity;
+    transition-property: all;
     transition-duration: 0.25s;
   }
 
@@ -94,6 +95,7 @@ export default {
   .fade-enter,
   .fade-leave-active {
     opacity: 0;
+    transform: translateX(-25px);
   }
 }
 </style>

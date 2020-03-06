@@ -3,6 +3,18 @@ const createToken = require('./helpers/generateToken');
 
 module.exports = {
   Query: {
+    getCurrentUser: async (_, args, { User, currentUser: { username } }) => {
+      if (!username) {
+        return null;
+      }
+
+      const user = await User.findOne({ username }).populate({
+        path: 'favorites',
+        model: 'Post'
+      });
+
+      return user;
+    },
     getPosts: async (_, args, { Post }) => {
       const posts = await Post.find({})
         .sort({ createdDate: 'desc' })

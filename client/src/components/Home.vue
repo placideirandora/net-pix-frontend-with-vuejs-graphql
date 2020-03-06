@@ -3,10 +3,12 @@
     <div v-if="loading" class="home__loader">
       <ContentLoader />
     </div>
-    <h1 v-else-if="!loading && error" class="home__error">{{ error }}</h1>
+    <div v-else-if="!loading && error" class="home__error">
+      <ServerError />
+    </div>
     <div v-else-if="!loading && posts.length > 0">
       <v-flex xs12>
-        <v-carousel v-bind="{ 'cycle': true }" interval="4000">
+        <v-carousel v-bind="{ 'cycle': true }" interval="5000">
           <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
             <h2 class="home__title">{{ post.title }}</h2>
           </v-carousel-item>
@@ -20,11 +22,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import ContentLoader from '../components/Helpers/ContentLoader';
+import ServerError from '../components/Helpers/ServerError';
 
 export default {
   name: 'Home',
   components: {
-    ContentLoader
+    ContentLoader,
+    ServerError
   },
   computed: {
     ...mapGetters(['loading', 'posts', 'error'])
@@ -59,9 +63,8 @@ export default {
   }
 
   &__error {
-    color: #F71735;
     text-align: center;
-    margin-top: 15rem;
+    margin-top: 5rem;
   }
 }
 </style>

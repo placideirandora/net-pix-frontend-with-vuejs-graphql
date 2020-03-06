@@ -13,5 +13,8 @@ new Vue({
   store,
   vuetify,
   apolloProvider: createProvider(),
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    this.$store.dispatch('getCurrentUser');
+  }
 }).$mount('#app');
