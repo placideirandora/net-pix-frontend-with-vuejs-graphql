@@ -27,15 +27,16 @@ module.exports = {
     },
     loginUser: async (_, { username, password }, { User }) => {
       const user = await User.findOne({ username });
+      const message = 'Incorrect username or password';
 
       if (!user) {
-        throw new Error('User not found');
+        throw new Error(message);
       }
 
       const isValidPassword = await bcrypt.compare(password, user.password);
 
       if (!isValidPassword) {
-        throw new Error('Invalid password');
+        throw new Error(message);
       }
 
       return { token: createToken(user, process.env.SECRET, '1hr') };

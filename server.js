@@ -1,7 +1,8 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer, AuthenticationError } = require('apollo-server');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('./models/User');
 const Post = require('./models/Post');
@@ -28,11 +29,28 @@ mongoose
     console.error('Database Not Connected Due To: ', err);
   });
 
+// Token verification
+const getUser = async token => {
+  if (token) {
+    try {
+      const user = await jwt.verify(token, process.env.SECRET);
+      console.log('Payload: ', user);
+    } catch (error) {
+      throw new AuthenticationError(
+        'Your session has expired. Please, Sign in again. '
+      );
+    }
+  }
+};
+
 // Initialize the Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { User, Post }
+  context: async ({ req }) => {
+    const token = req.headers.authorization.slice(7);
+    return { User, Post, currentUser: await getUser(token) };
+  }
 });
 
 // Start the server
