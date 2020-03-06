@@ -26,7 +26,7 @@
           <v-icon left class="hidden-xs-only">{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
-        <v-btn color="#004385" v-if="user">
+        <v-btn color="#004385" v-if="user" @click="handleSignoutUser">
           <v-icon left lass="hidden-xs-only">mdi-logout-variant</v-icon>Sign Out
         </v-btn>
       </v-toolbar-items>
@@ -81,6 +81,9 @@ export default {
   methods: {
     toggleSideNav() {
       this.sideNav = !this.sideNav;
+    },
+    handleSignoutUser() {
+      this.$store.dispatch('signoutUser');
     }
   }
 };

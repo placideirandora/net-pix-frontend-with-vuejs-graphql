@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { apolloClient, onLogin } from '../graphql/vue-apollo';
+import { apolloClient, onLogin, onLogout } from '../graphql/vue-apollo';
 import { GET_POSTS, GET_CURRENT_USER } from '../graphql/queries';
 import { LOGIN_USER } from '../graphql/mutations';
-import router from '../router/index';
 
 Vue.use(Vuex);
 
@@ -30,7 +29,8 @@ export default new Vuex.Store({
     },
     setError: (state, payload) => {
       state.error = payload;
-    }
+    },
+    clearUser: state => (state.user = null)
   },
   actions: {
     getCurrentUser: ({ commit }) => {
@@ -73,12 +73,15 @@ export default new Vuex.Store({
             }
           }) => {
             onLogin(apolloClient, token);
-            router.go();
           }
         )
         .catch(({ message }) => {
           console.log(message.slice(15));
         });
+    },
+    signoutUser: ({ commit }) => {
+      commit('clearUser');
+      onLogout(apolloClient);
     }
   },
   getters: {
