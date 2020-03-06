@@ -58,9 +58,7 @@ export default {
   },
   watch: {
     user() {
-      setTimeout(() => {
-        this.$router.push({ name: 'Home' });
-      }, 1000);
+      this.$router.push({ name: 'Home' });
     }
   },
   methods: {

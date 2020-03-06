@@ -26,6 +26,9 @@
           <v-icon left class="hidden-xs-only">{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
+        <v-btn color="#004385" v-if="user">
+          <v-icon left lass="hidden-xs-only">mdi-logout-variant</v-icon>Sign Out
+        </v-btn>
       </v-toolbar-items>
     </v-toolbar>
     <main>
@@ -39,6 +42,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'App',
   data() {
@@ -47,15 +52,23 @@ export default {
     };
   },
   computed: {
-    colors() {
-      return this.$store.getters.colors;
-    },
+    ...mapGetters(['colors', 'user']),
     horizontalNavItems() {
-      return [
+      let items = [
         { icon: 'mdi-post', title: 'Posts', link: '/posts' },
         { icon: 'mdi-login-variant', title: 'Sign In', link: '/signin' },
         { icon: 'mdi-account-plus', title: 'Sign Up', link: '/signup' }
       ];
+
+      if (this.user) {
+        items = [
+          { icon: 'mdi-message', title: 'Posts', link: '/posts' },
+          { icon: 'mdi-message-plus', title: 'Add Post', link: '/add-post' },
+          { icon: 'mdi-account-box', title: 'profile', link: '/profile' }
+        ];
+      }
+
+      return items;
     },
     sideNavItems() {
       return [
