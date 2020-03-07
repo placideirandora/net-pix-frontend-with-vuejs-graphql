@@ -61,6 +61,9 @@ export default new Vuex.Store({
         });
     },
     signinUser: (_, payload) => {
+      // Prevent malformed token error
+      localStorage.setItem('token', '');
+
       apolloClient
         .mutate({
           mutation: LOGIN_USER,

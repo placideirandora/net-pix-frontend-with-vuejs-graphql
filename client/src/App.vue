@@ -55,7 +55,7 @@ export default {
     ...mapGetters(['colors', 'user']),
     horizontalNavItems() {
       let items = [
-        { icon: 'mdi-post', title: 'Posts', link: '/posts' },
+        { icon: 'mdi-message', title: 'Posts', link: '/posts' },
         { icon: 'mdi-login-variant', title: 'Sign In', link: '/signin' },
         { icon: 'mdi-account-plus', title: 'Sign Up', link: '/signup' }
       ];
@@ -72,7 +72,7 @@ export default {
     },
     sideNavItems() {
       return [
-        { icon: 'chat', title: 'Posts', link: '/posts' },
+        { icon: 'mdi-message', title: 'Posts', link: '/posts' },
         { icon: 'lock_open', title: 'Sign In', link: '/signin' },
         { icon: 'create', title: 'Sign Up', link: '/signup' }
       ];

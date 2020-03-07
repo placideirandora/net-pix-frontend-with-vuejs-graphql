@@ -21,8 +21,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ContentLoader from '../components/Helpers/ContentLoader';
-import ServerError from '../components/Helpers/ServerError';
+import ContentLoader from '../components/Shared/ContentLoader';
+import ServerError from '../components/Shared/ServerError';
 
 export default {
   name: 'Home',
