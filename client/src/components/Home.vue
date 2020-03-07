@@ -3,19 +3,21 @@
     <div v-if="loading" class="home__loader">
       <ContentLoader />
     </div>
-    <div v-else-if="!loading && error" class="home__error">
-      <ServerError :message="error" />
+    <div v-else-if="!loading && pageError">
+      <ServerError :message="pageError" />
     </div>
     <div v-else-if="!loading && posts.length > 0">
       <v-flex xs12>
-        <v-carousel v-bind="{ 'cycle': true }" interval="5000">
+        <v-carousel :max="6" v-bind="{ 'cycle': true }" interval="5000">
           <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
             <h2 class="home__title">{{ post.title }}</h2>
           </v-carousel-item>
         </v-carousel>
       </v-flex>
     </div>
-    <div v-else>No Posts</div>
+    <div v-else>
+      <ServerError :message="pageError" />
+    </div>
   </v-container>
 </template>
 
@@ -31,7 +33,7 @@ export default {
     ServerError
   },
   computed: {
-    ...mapGetters(['loading', 'posts', 'error'])
+    ...mapGetters(['loading', 'posts', 'pageError', 'authError'])
   },
   methods: {
     handleGetCarouselPosts() {
@@ -40,6 +42,11 @@ export default {
   },
   created() {
     this.handleGetCarouselPosts();
+  },
+  mount() {
+    if (this.authError) {
+      this.$store.commit('clearAuthError', null);
+    }
   }
 };
 </script>
@@ -60,11 +67,6 @@ export default {
 
   &__loader {
     margin-top: 6rem;
-  }
-
-  &__error {
-    text-align: center;
-    margin-top: 5rem;
   }
 }
 </style>

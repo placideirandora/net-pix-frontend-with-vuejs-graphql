@@ -1,5 +1,5 @@
 <template>
-  <ListLoader primaryColor="#CECECE" width="250" height="200" speed="1" />
+  <ListLoader primaryColor="#CECECE" :width="250" :height="200" :speed="1" />
 </template>
 
 <script>

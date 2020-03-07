@@ -1,10 +1,12 @@
 import Vue from 'vue';
 import VueApollo from 'vue-apollo';
+import { onError } from 'apollo-link-error';
 import {
   createApolloClient,
   restartWebsockets
 } from 'vue-cli-plugin-apollo/graphql-client';
 import router from '../router/index';
+import store from '../store';
 
 // Install the vue plugin
 Vue.use(VueApollo);
@@ -14,6 +16,18 @@ const AUTH_TOKEN = 'token';
 
 // Http endpoint
 const httpEndpoint = 'http://localhost:5000/graphql';
+
+const link = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.map(({ name, message }) => {
+      console.log(`[GraphQL error]: Name: ${name}, Message: ${message}`);
+      if (name === 'AuthenticationError') {
+        store.commit('setAuthError', message.slice(25));
+      }
+    });
+
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 // Config
 const defaultOptions = {
@@ -31,17 +45,7 @@ const defaultOptions = {
       }
     });
   },
-  onError: ({ graphQLErrors, networkError }) => {
-    if (networkError) {
-      console.log('[networkError]', networkError);
-    }
-
-    if (graphQLErrors) {
-      for (let error of graphQLErrors) {
-        console.dir(error);
-      }
-    }
-  }
+  link
 };
 
 // Create apollo client

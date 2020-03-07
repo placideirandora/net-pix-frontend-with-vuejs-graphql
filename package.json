@@ -4,7 +4,7 @@
   "description": "A full-stack web application for sharing images.",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon server.js",
+    "server": "nodemon apolloServer.js",
     "client": "cd client && npm run serve",
     "dev": "concurrently --names \"server,client\" \"npm run server --silent\" \"npm run client --silent\""
   },

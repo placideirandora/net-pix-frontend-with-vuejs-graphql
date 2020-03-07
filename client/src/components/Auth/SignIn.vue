@@ -4,7 +4,7 @@
     <v-layout row wrap>
       <v-flex xs12 sm6 offset-sm3>
         <h1 class="app__title">Welcome Back</h1>
-        <FormAlert :message="error" type="error" color="error" v-if="error" />
+        <FormAlert :message="formError" type="error" color="error" v-if="formError" />
       </v-flex>
     </v-layout>
     <v-card width="750" class="mx-auto" :color="colors.formBackground">
@@ -74,19 +74,19 @@ export default {
       usernameRules: [
         username => !!username || 'Username is required',
         username =>
-          (username.length > 3 && username.length < 21) ||
+          (username.length >= 4 && username.length <= 20) ||
           'Username must be at least 4 and not greater than 20 characters'
       ],
       passwordRules: [
         password => !!password || 'Password is required',
         password =>
-          password.length >= 10 || 'Password must be at least 10 characters'
+          password.length >= 6 || 'Password must be at least 6 characters'
       ],
       isFormValid: true
     };
   },
   computed: {
-    ...mapGetters(['colors', 'loading', 'user', 'error'])
+    ...mapGetters(['colors', 'loading', 'user', 'formError'])
   },
   watch: {
     user() {
@@ -103,6 +103,11 @@ export default {
         this.$store.dispatch('signinUser', credentials);
       }
     }
+  },
+  mounted() {
+    if (this.formError) {
+      this.$store.commit('clearFormError', null);
+    }
   }
 };
 </script>
@@ -110,7 +115,7 @@ export default {
 <style lang="scss" scoped>
 .app {
   &__title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 }
 .custom-loader {

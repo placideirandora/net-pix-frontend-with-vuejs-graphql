@@ -4,7 +4,7 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import '@babel/polyfill';
-import { createProvider } from './graphql/vue-apollo';
+import { createProvider } from './graphql/apolloClient';
 import FormAlert from '../src/components/Shared/FormAlert';
 
 Vue.config.productionTip = false;

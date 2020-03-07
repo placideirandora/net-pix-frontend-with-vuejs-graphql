@@ -36,6 +36,23 @@
         <transition name="fade">
           <router-view />
         </transition>
+        <v-snackbar :color="colorType" bottom left :timeout="5000" v-model="authSnackbar">
+          <v-icon class="mr-3" color="white">{{ icon }}</v-icon>
+          <h3>{{ notification }}</h3>
+          <v-btn @click="authSnackbar = false">Close</v-btn>
+        </v-snackbar>
+        <v-snackbar
+          color="warning"
+          bottom
+          left
+          :timeout="8000"
+          v-model="authErrorSnackbar"
+          v-if="authError"
+        >
+          <v-icon class="mr-3" color="white">mdi-alert-circle</v-icon>
+          <h3>{{ authError }}</h3>
+          <v-btn @click="authErrorSnackbar = false">Close</v-btn>
+        </v-snackbar>
       </v-container>
     </main>
   </v-app>
@@ -48,11 +65,45 @@ export default {
   name: 'App',
   data() {
     return {
-      sideNav: false
+      sideNav: false,
+      authSnackbar: false,
+      authErrorSnackbar: false,
+      notification: null,
+      colorType: null,
+      icon: null
     };
   },
+  watch: {
+    user(newValue) {
+      if (newValue) {
+        this.icon = 'mdi-check-circle';
+        this.colorType = 'success';
+        this.notification = 'You are now signed in!';
+        this.authSnackbar = true;
+      } else {
+        this.icon = 'mdi-information';
+        this.colorType = 'info';
+        this.notification = 'You are now signed out!';
+        this.authSnackbar = true;
+      }
+    },
+    authError(newValue) {
+      if (newValue) {
+        localStorage.removeItem('token');
+        this.authErrorSnackbar = true;
+
+        const {
+          history: {
+            current: { name }
+          }
+        } = this.$router;
+
+        name !== 'SignIn' ? this.$router.push({ name: 'SignIn' }) : null;
+      }
+    }
+  },
   computed: {
-    ...mapGetters(['colors', 'user']),
+    ...mapGetters(['colors', 'user', 'authError']),
     horizontalNavItems() {
       let items = [
         { icon: 'mdi-message', title: 'Posts', link: '/posts' },
