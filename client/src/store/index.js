@@ -11,10 +11,11 @@ export default new Vuex.Store({
     user: null,
     posts: [],
     loading: false,
-    error: '',
+    error: null,
     colors: {
       primary: '#004385',
-      secondary: '#457EAC'
+      secondary: '#457EAC',
+      formBackground: '#C2C1C2'
     }
   },
   mutations: {
@@ -30,7 +31,8 @@ export default new Vuex.Store({
     setError: (state, payload) => {
       state.error = payload;
     },
-    clearUser: state => (state.user = null)
+    clearUser: state => (state.user = null),
+    clearError: state => (state.error = null)
   },
   actions: {
     getCurrentUser: ({ commit }) => {
@@ -46,6 +48,7 @@ export default new Vuex.Store({
         });
     },
     getPosts: ({ commit }) => {
+      commit('clearError', null);
       commit('setLoading', true);
       apolloClient
         .query({
@@ -60,7 +63,9 @@ export default new Vuex.Store({
           commit('setError', message.slice(15));
         });
     },
-    signinUser: (_, payload) => {
+    signinUser: ({ commit }, payload) => {
+      commit('clearError', null);
+      commit('setLoading', true);
       // Prevent malformed token error
       localStorage.setItem('token', '');
 
@@ -75,11 +80,13 @@ export default new Vuex.Store({
               loginUser: { token }
             }
           }) => {
+            commit('setLoading', false);
             onLogin(apolloClient, token);
           }
         )
         .catch(({ message }) => {
-          console.log(message.slice(15));
+          commit('setLoading', false);
+          commit('setError', message.slice(15));
         });
     },
     signoutUser: ({ commit }) => {

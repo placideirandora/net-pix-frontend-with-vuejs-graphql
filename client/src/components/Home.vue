@@ -4,7 +4,7 @@
       <ContentLoader />
     </div>
     <div v-else-if="!loading && error" class="home__error">
-      <ServerError />
+      <ServerError :message="error" />
     </div>
     <div v-else-if="!loading && posts.length > 0">
       <v-flex xs12>

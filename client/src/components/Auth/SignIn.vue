@@ -1,18 +1,26 @@
 <template>
   <v-container class="app text-center text-uppercase">
     <img src="../../assets/auth.svg" alt="authentication" width="300" height="200" />
-    <h1 class="app__title">Welcome Back</h1>
-    <v-card width="750" class="mx-auto">
+    <v-layout row wrap>
+      <v-flex xs12 sm6 offset-sm3>
+        <h1 class="app__title">Welcome Back</h1>
+        <FormAlert :message="error" type="error" color="error" v-if="error" />
+      </v-flex>
+    </v-layout>
+    <v-card width="750" class="mx-auto" :color="colors.formBackground">
       <v-card-text>
-        <v-form>
+        <v-form v-model="isFormValid" lazy-validation ref="form">
           <v-text-field
             :color="colors.secondary"
+            :rules="usernameRules"
             label="Username"
             prepend-icon="mdi-account-circle"
             v-model="username"
+            autocomplete="off"
           />
           <v-text-field
             :color="colors.secondary"
+            :rules="passwordRules"
             label="Password"
             :type="showPassword ? 'text' : 'password'"
             prepend-icon="mdi-lock"
@@ -24,11 +32,23 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn class="ma-2" :color="colors.secondary" dark @click="handleSigninUser">
+        <v-btn
+          class="ma-2"
+          :color="colors.secondary"
+          dark
+          :loading="loading"
+          :disabled="!isFormValid"
+          @click="handleSigninUser"
+        >
           Continue
+          <template v-slot:loader>
+            <span class="custom-loader">
+              <v-icon light>cached</v-icon>
+            </span>
+          </template>
           <v-icon dark right>mdi-arrow-right</v-icon>
         </v-btn>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-container class="text-right caption">
           <router-link
             to="/signup"
@@ -50,11 +70,23 @@ export default {
     return {
       username: '',
       password: '',
-      showPassword: false
+      showPassword: false,
+      usernameRules: [
+        username => !!username || 'Username is required',
+        username =>
+          (username.length > 3 && username.length < 21) ||
+          'Username must be at least 4 and not greater than 20 characters'
+      ],
+      passwordRules: [
+        password => !!password || 'Password is required',
+        password =>
+          password.length >= 10 || 'Password must be at least 10 characters'
+      ],
+      isFormValid: true
     };
   },
   computed: {
-    ...mapGetters(['colors', 'user'])
+    ...mapGetters(['colors', 'loading', 'user', 'error'])
   },
   watch: {
     user() {
@@ -63,8 +95,13 @@ export default {
   },
   methods: {
     handleSigninUser() {
-      const credentials = { username: this.username, password: this.password };
-      this.$store.dispatch('signinUser', credentials);
+      if (this.$refs.form.validate()) {
+        const credentials = {
+          username: this.username,
+          password: this.password
+        };
+        this.$store.dispatch('signinUser', credentials);
+      }
     }
   }
 };
@@ -73,7 +110,43 @@ export default {
 <style lang="scss" scoped>
 .app {
   &__title {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

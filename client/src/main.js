@@ -5,8 +5,10 @@ import store from './store';
 import vuetify from './plugins/vuetify';
 import '@babel/polyfill';
 import { createProvider } from './graphql/vue-apollo';
+import FormAlert from '../src/components/Shared/FormAlert';
 
 Vue.config.productionTip = false;
+Vue.component('FormAlert', FormAlert);
 
 new Vue({
   router,
