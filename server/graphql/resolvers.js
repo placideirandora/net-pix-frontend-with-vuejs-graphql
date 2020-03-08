@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const createToken = require('./helpers/generateToken');
+const createToken = require('../helpers/generateToken');
 
 module.exports = {
   Query: {

@@ -6,10 +6,10 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const User = require('./models/User');
 const Post = require('./models/Post');
-const resolvers = require('./resolvers');
+const resolvers = require('./graphql/resolvers');
 
 // Read the GraphQL file and assign the defined types
-const filePath = path.join(__dirname, 'typeDefs.gql');
+const filePath = path.join(__dirname, 'graphql/typeDefs.gql');
 const typeDefs = fs.readFileSync(filePath, 'utf-8');
 
 // Configure environment variables
