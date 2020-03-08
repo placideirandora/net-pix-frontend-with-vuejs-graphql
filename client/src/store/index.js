@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { apolloClient, onLogin, onLogout } from '../graphql/apolloClient';
 import { GET_POSTS, GET_CURRENT_USER } from '../graphql/queries';
-import { LOGIN_USER } from '../graphql/mutations';
+import { REGISTER_USER, LOGIN_USER } from '../graphql/mutations';
 
 Vue.use(Vuex);
 
@@ -17,7 +17,7 @@ export default new Vuex.Store({
     colors: {
       primary: '#004385',
       secondary: '#457EAC',
-      formBackground: '#C2C1C2'
+      formBackground: '#BFBDBF'
     }
   },
   mutations: {
@@ -74,6 +74,30 @@ export default new Vuex.Store({
         .catch(({ message }) => {
           commit('setLoading', false);
           commit('setPageError', message);
+        });
+    },
+    signupUser: ({ commit }, payload) => {
+      commit('clearFormError', null);
+      commit('setLoading', true);
+
+      apolloClient
+        .mutate({
+          mutation: REGISTER_USER,
+          variables: payload
+        })
+        .then(
+          ({
+            data: {
+              registerUser: { token }
+            }
+          }) => {
+            commit('setLoading', false);
+            onLogin(apolloClient, token);
+          }
+        )
+        .catch(({ message }) => {
+          commit('setLoading', false);
+          commit('setFormError', message.slice(15));
         });
     },
     signinUser: ({ commit }, payload) => {

@@ -30,7 +30,7 @@ module.exports = {
       const user = await User.findOne({ username });
 
       if (user) {
-        throw new Error('User already exists');
+        throw new Error(`Username - ${user.username} - already exists. Choose another`);
       }
 
       const newUser = await new User({ username, email, password }).save();

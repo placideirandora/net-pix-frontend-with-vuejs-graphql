@@ -15,6 +15,7 @@
             :rules="usernameRules"
             label="Username"
             prepend-icon="mdi-account-circle"
+            :clearable="true"
             v-model="username"
             autocomplete="off"
           />
@@ -25,6 +26,7 @@
             :type="showPassword ? 'text' : 'password'"
             prepend-icon="mdi-lock"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :clearable="true"
             @click:append="showPassword = !showPassword"
             v-model="password"
           />
@@ -75,7 +77,7 @@ export default {
         username => !!username || 'Username is required',
         username =>
           (username.length >= 4 && username.length <= 20) ||
-          'Username must be at least 4 and not greater than 20 characters'
+          'Username cannot be less than 4 characters'
       ],
       passwordRules: [
         password => !!password || 'Password is required',
