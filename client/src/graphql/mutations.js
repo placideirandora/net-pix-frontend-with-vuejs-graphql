@@ -17,3 +17,30 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+// Publish post
+export const PUBLISH_POST = gql`
+  mutation(
+    $title: String!
+    $imageUrl: String!
+    $categories: [String]!
+    $description: String!
+    $author: ID!
+  ) {
+    addPost(
+      title: $title
+      imageUrl: $imageUrl
+      categories: $categories
+      description: $description
+      creatorId: $author
+    ) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+      createdDate
+      likes
+    }
+  }
+`;

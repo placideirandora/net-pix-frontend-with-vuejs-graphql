@@ -2,13 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { apolloClient, onLogin, onLogout } from '../graphql/apolloClient';
 import { GET_POSTS, GET_CURRENT_USER } from '../graphql/queries';
-import { REGISTER_USER, LOGIN_USER } from '../graphql/mutations';
+import { REGISTER_USER, LOGIN_USER, PUBLISH_POST } from '../graphql/mutations';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     user: null,
+    published: false,
     posts: [],
     loading: false,
     pageError: null,
@@ -23,6 +24,9 @@ export default new Vuex.Store({
   mutations: {
     setUser: (state, payload) => {
       state.user = payload;
+    },
+    setPublished: (state, payload) => {
+      state.published = payload;
     },
     setPosts: (state, payload) => {
       state.posts = payload;
@@ -70,6 +74,35 @@ export default new Vuex.Store({
         .then(({ data: { getPosts } }) => {
           commit('setPosts', getPosts);
           commit('setLoading', false);
+        })
+        .catch(({ message }) => {
+          commit('setLoading', false);
+          commit('setPageError', message);
+        });
+    },
+    publishPost: ({ commit }, payload) => {
+      commit('clearPageError', null);
+      commit('setLoading', true);
+      apolloClient
+        .mutate({
+          mutation: PUBLISH_POST,
+          variables: payload,
+          update: (cache, { data: { addPost } }) => {
+            const data = cache.readQuery({ query: GET_POSTS });
+            data.getPosts.unshift(addPost);
+            cache.writeQuery({ query: GET_POSTS, data });
+          },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            addPost: {
+              __typename: 'Post',
+              _id: -1,
+              ...payload
+            }
+          }
+        })
+        .then(() => {
+          commit('setPublished', true);
         })
         .catch(({ message }) => {
           commit('setLoading', false);
@@ -133,6 +166,7 @@ export default new Vuex.Store({
   },
   getters: {
     user: state => state.user,
+    published: state => state.published,
     posts: state => state.posts,
     loading: state => state.loading,
     colors: state => state.colors,

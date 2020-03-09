@@ -41,6 +41,11 @@
           <h3>{{ notification }}</h3>
           <v-btn @click="authSnackbar = false">Close</v-btn>
         </v-snackbar>
+        <v-snackbar color="success" bottom left :timeout="5000" v-model="postSnackbar">
+          <v-icon class="mr-3" color="white">mdi-check-circle</v-icon>
+          <h3>You have published the post.</h3>
+          <v-btn @click="postSnackbar = false">Close</v-btn>
+        </v-snackbar>
         <v-snackbar
           color="warning"
           bottom
@@ -68,6 +73,7 @@ export default {
       sideNav: false,
       authSnackbar: false,
       authErrorSnackbar: false,
+      postSnackbar: false,
       notification: null,
       colorType: null,
       icon: null
@@ -78,13 +84,18 @@ export default {
       if (newValue) {
         this.icon = 'mdi-check-circle';
         this.colorType = 'success';
-        this.notification = 'You are now signed in!';
+        this.notification = 'You are now signed in.';
         this.authSnackbar = true;
       } else {
         this.icon = 'mdi-information';
         this.colorType = 'info';
-        this.notification = 'You are now signed out!';
+        this.notification = 'You are now signed out.';
         this.authSnackbar = true;
+      }
+    },
+    published(newValue) {
+      if (newValue) {
+        this.postSnackbar = true;
       }
     },
     authError(newValue) {
@@ -103,7 +114,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['colors', 'user', 'authError']),
+    ...mapGetters(['colors', 'user', 'authError', 'published']),
     horizontalNavItems() {
       let items = [
         { icon: 'mdi-message', title: 'Posts', link: '/posts' },
