@@ -125,7 +125,7 @@ export default {
       if (this.user) {
         items = [
           { icon: 'mdi-message', title: 'Posts', link: '/posts' },
-          { icon: 'mdi-message-plus', title: 'Add Post', link: '/add-post' },
+          { icon: 'mdi-message-plus', title: 'Publish Post', link: '/add-post' },
           { icon: 'mdi-account-box', title: 'profile', link: '/profile' }
         ];
       }

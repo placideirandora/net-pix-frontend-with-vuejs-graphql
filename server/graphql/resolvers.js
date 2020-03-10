@@ -23,6 +23,36 @@ module.exports = {
           model: 'User'
         });
       return posts;
+    },
+    infiniteScrollPosts: async (_, { pageNum, pageSize }, { Post }) => {
+      let posts;
+      if (pageNum === 1) {
+        posts = await Post.find({})
+          .sort({ createdDate: 'desc' })
+          .populate({
+            path: 'createdBy',
+            model: 'User'
+          })
+          .limit(pageSize);
+      } else {
+        const skips = pageSize * (pageNum - 1);
+        posts = await Post.find({})
+          .sort({ createdDate: 'desc' })
+          .populate({
+            path: 'createdBy',
+            model: 'User'
+          })
+          .skip(skips)
+          .limit(pageSize);
+      }
+
+      const totalDocs = await Post.countDocuments();
+      const hasMore = totalDocs > pageSize * pageNum;
+
+      return {
+        posts,
+        hasMore
+      };
     }
   },
   Mutation: {
@@ -30,7 +60,9 @@ module.exports = {
       const user = await User.findOne({ username });
 
       if (user) {
-        throw new Error(`Username - ${user.username} - already exists. Choose another`);
+        throw new Error(
+          `Username - ${user.username} - already exists. Choose another`
+        );
       }
 
       const newUser = await new User({ username, email, password }).save();
@@ -51,7 +83,7 @@ module.exports = {
         throw new Error(message);
       }
 
-      return { token: createToken(user, process.env.SECRET, '1hr') };
+      return { token: createToken(user, process.env.SECRET, '5hr') };
     },
     addPost: async (
       _,

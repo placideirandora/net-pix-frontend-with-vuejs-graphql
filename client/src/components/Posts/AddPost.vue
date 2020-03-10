@@ -109,14 +109,14 @@ export default {
       titleRules: [
         title => !!title || 'Title is required',
         title =>
-          (title.length >= 10 && title.length <= 70) ||
-          'Title cannot be less than 10 or greater than 70 characters'
+          (title.length >= 10 && title.length <= 50) ||
+          'Title cannot be less than 10 or greater than 50 characters'
       ],
       descriptionRules: [
         description => !!description || 'Description is required',
         description =>
-          (description.length >= 50 && description.length <= 1000) ||
-          'Description cannot be less than 50 or greater than 1000 characters'
+          (description.length >= 50 && description.length <= 2000) ||
+          'Description cannot be less than 50 or greater than 2000 characters'
       ],
       imgUrlRules: [imgUrl => !!imgUrl || 'Image URL is required'],
       categoryRules: [

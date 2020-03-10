@@ -1,7 +1,9 @@
-# NETPIX (VUEJS, NODEJS, & GRAPHQL)
+# NETPIX (VUE.JS, NODE.JS, & GRAPHQL)
+
 A full-stack web application for sharing images.
 
 ## SOFTWARE TECHNOLOGIES
+
 - **VueJS** - JavaScript Library For Building User Interfaces
 - **GraphQL** - Data Query And Manipulation Language For Web API
 - **Vuetify** - Semantic And Reusable UI Components
@@ -14,22 +16,27 @@ A full-stack web application for sharing images.
 ## GETTING STARTED
 
 ### Set Up MongoDB Atlas (cloud option)
+
 ```
 $ Visit https://www.mongodb.com/cloud
 ```
 
 ### Download And Install MongoDB (local option)
+
 ```
-$ For Mac, visit https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/ 
+$ For Mac, visit https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
 ```
+
 ```
 $ For Windows, visit https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 ```
+
 ```
 $ For Linux, visit https://docs.mongodb.com/manual/administration/install-on-linux/
 ```
 
 ### Visualize MongoDB (optional)
+
 ```
 $ Download and install, MongoDB Compass at https://www.mongodb.com/products/compass
 ```
@@ -37,5 +44,5 @@ $ Download and install, MongoDB Compass at https://www.mongodb.com/products/comp
 ### Clone The Project
 
 ```
-$ git clone https://github.com/placideirandora/net-pix-with-vuejs-nodejs-and-graphql
+$ git clone https://github.com/placideirandora/net-pix-with-vue.js-node.js-and-graphql
 ```

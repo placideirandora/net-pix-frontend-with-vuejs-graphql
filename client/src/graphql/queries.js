@@ -30,3 +30,29 @@ export const GET_POSTS = gql`
     }
   }
 `;
+
+// Infinite scroll posts
+export const INFINITE_SCROLL_POSTS = gql`
+  query($pageNum: Int!, $pageSize: Int!) {
+    infiniteScrollPosts(pageNum: $pageNum, pageSize: $pageSize) {
+      hasMore
+      posts {
+        _id
+        title
+        description
+        imageUrl
+        categories
+        likes
+        createdDate
+        createdBy {
+          _id
+          username
+          avatar
+        }
+        messages {
+          _id
+        }
+      }
+    }
+  }
+`;
