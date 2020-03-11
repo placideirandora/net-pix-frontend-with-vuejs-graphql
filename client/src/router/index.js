@@ -4,6 +4,7 @@ import AuthGuard from '../helpers/authGuard';
 import Home from '../components/Home.vue';
 import AddPost from '../components/Posts/AddPost.vue';
 import Posts from '../components/Posts/Posts.vue';
+import Post from '../components/Posts/Post.vue';
 import Profile from '../components/Auth/Profile.vue';
 import SignIn from '../components/Auth/SignIn.vue';
 import SignUp from '../components/Auth/SignUp.vue';
@@ -20,6 +21,12 @@ const routes = [
     path: '/posts',
     name: 'Posts',
     component: Posts
+  },
+  {
+    path: '/posts/:postId',
+    name: 'Post',
+    component: Post,
+    props: true
   },
   {
     path: '/add-post',

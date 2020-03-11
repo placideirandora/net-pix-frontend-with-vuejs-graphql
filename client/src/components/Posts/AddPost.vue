@@ -30,8 +30,6 @@
           <v-img
             v-if="imgUrl"
             :src="imgUrl"
-            lazy-src="Image Preview..."
-            transition="true"
             alt="Image Preview"
             :max-height="300"
             :max-width="700"
@@ -115,8 +113,8 @@ export default {
       descriptionRules: [
         description => !!description || 'Description is required',
         description =>
-          (description.length >= 50 && description.length <= 2000) ||
-          'Description cannot be less than 50 or greater than 2000 characters'
+          (description.length >= 100 && description.length <= 1000) ||
+          'Description cannot be less than 100 or greater than 1000 characters'
       ],
       imgUrlRules: [imgUrl => !!imgUrl || 'Image URL is required'],
       categoryRules: [

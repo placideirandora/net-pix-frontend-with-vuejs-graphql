@@ -24,6 +24,14 @@ module.exports = {
         });
       return posts;
     },
+    getPost: async (_, { postId }, { Post }) => {
+      const post = await Post.findOne({ _id: postId }).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      });
+
+      return post;
+    },
     infiniteScrollPosts: async (_, { pageNum, pageSize }, { Post }) => {
       let posts;
       if (pageNum === 1) {

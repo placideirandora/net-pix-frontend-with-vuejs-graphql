@@ -3,13 +3,18 @@
     <v-layout row wrap v-if="infiniteScrollPosts">
       <v-flex xs12 sm6 v-for="post in infiniteScrollPosts.posts" :key="post._id">
         <v-card hover class="text-uppercase">
-          <v-img class="white--text align-end" height="30vh" :src="post.imageUrl" lazy />
+          <v-img
+            class="white--text align-end"
+            height="30vh"
+            :src="post.imageUrl"
+            @click.native="goToPost(post._id)"
+          />
           <v-card-actions>
             <v-card-title>
               <div>
-                <div class="caption">{{ post.title }}</div>
+                <div class="body-1">{{ post.title }}</div>
                 <span
-                  class="grey--text caption"
+                  class="grey--text body-1"
                 >{{ post.likes }} Likes - {{ post.messages.length }} Comments</span>
               </div>
             </v-card-title>
@@ -24,7 +29,7 @@
                 <v-list-item-avatar>
                   <v-img :src="post.createdBy.avatar" alt="Author Avatar" />
                 </v-list-item-avatar>
-                <v-list-item-content class="caption">
+                <v-list-item-content class="body-1">
                   <v-list-item-title class="text--primary">{{ post.createdBy.username }}</v-list-item-title>
                   <v-list-item-subtitle
                     class="font-weight-light"
@@ -98,6 +103,9 @@ export default {
           };
         }
       });
+    },
+    goToPost(id) {
+      this.$router.push({ name: 'Post', params: { postId: id } });
     }
   }
 };

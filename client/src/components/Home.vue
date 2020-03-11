@@ -9,7 +9,12 @@
     <div v-else-if="!loading && posts.length > 0">
       <v-flex xs12>
         <v-carousel :max="6" v-bind="{ 'cycle': true }" interval="5000">
-          <v-carousel-item v-for="post in posts" :key="post._id" :src="post.imageUrl">
+          <v-carousel-item
+            v-for="post in posts"
+            :key="post._id"
+            :src="post.imageUrl"
+            @click.native="goToPost(post._id)"
+          >
             <h2 class="home__title">{{ post.title }}</h2>
           </v-carousel-item>
         </v-carousel>
@@ -38,6 +43,9 @@ export default {
   methods: {
     handleGetCarouselPosts() {
       this.$store.dispatch('getPosts');
+    },
+    goToPost(id) {
+      this.$router.push({ name: 'Post', params: { postId: id } });
     }
   },
   created() {
