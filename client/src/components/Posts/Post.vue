@@ -41,13 +41,16 @@
             >{{ category }}</v-chip>
           </span>
           <v-spacer />
-          <h4 class="mt-3 font-weight-thin text-right">{{ getPost.likes }} Likes</h4>
+          <h4
+            class="mt-3 font-weight-thin text-right"
+          >{{ getPost.likes > 0 ? ( getPost.likes === 1 ? '1 Like' : `${getPost.likes} Likes` ) : '0 Likes' }}</h4>
           <v-btn large icon v-if="user" class="ml-5">
             <v-icon
               large
-              style="font-size: 26px;"
-              :color="bookmarked ? colors.secondary : 'grey'"
-            >{{ bookmarked ? 'mdi-bookmark' : 'mdi-bookmark-outline' }}</v-icon>
+              style="font-size: 24px;"
+              :color="checkIfPostLiked(getPost._id) ? colors.secondary : 'grey'"
+              @click="handleToggleLike"
+            >mdi-thumb-up</v-icon>
           </v-btn>
         </v-layout>
         <v-layout>
@@ -59,7 +62,7 @@
     <v-layout row wrap>
       <v-flex xs12>
         <v-list-group subheader two-line>
-          <v-subheader>{{ getPost.messages.length > 0 ? ( getPost.messages.length === 1 ? '1 Comment' : `${getPost.messages.length} comments` ) : '0 comments' }}</v-subheader>
+          <v-subheader>{{ getPost.messages.length > 0 ? ( getPost.messages.length === 1 ? '1 Comment' : `${getPost.messages.length} comments` ) : '0 Comments' }}</v-subheader>
           <template v-for="message in getPost.messages">
             <v-divider :key="message._id" />
             <v-list-item inset :key="message.title">
@@ -109,7 +112,7 @@
     </v-layout>
     <v-layout class="mt-4" v-if="!user">
       <v-flex xs12>
-        <h5 class="text-uppercase grey--text">Sign in to comment on, like, or bookmark this post</h5>
+        <h5 class="text-uppercase grey--text">Sign in to like or comment on this post</h5>
       </v-flex>
     </v-layout>
   </v-container>
@@ -118,7 +121,11 @@
 <script>
 import { mapGetters } from 'vuex';
 import { GET_POST } from '../../graphql/queries';
-import { ADD_POST_COMMENT } from '../../graphql/mutations';
+import {
+  ADD_POST_COMMENT,
+  LIKE_POST,
+  UNLIKE_POST
+} from '../../graphql/mutations';
 
 export default {
   name: 'Post',
@@ -126,7 +133,8 @@ export default {
   data() {
     return {
       dialog: false,
-      bookmarked: false,
+      liked: false,
+      postLiked: false,
       isFormValid: true,
       comment: '',
       commentRules: [
@@ -138,7 +146,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'colors'])
+    ...mapGetters(['user', 'colors', 'userFavorites'])
   },
   methods: {
     goToPreviousPage() {
@@ -147,8 +155,89 @@ export default {
     toggleImageDialog() {
       this.dialog = !this.dialog;
     },
+    checkIfPostLiked(postId) {
+      if (
+        this.userFavorites &&
+        this.userFavorites.some(fav => fav._id === postId)
+      ) {
+        this.postLiked = true;
+        return true;
+      } else {
+        this.postLiked = false;
+        return false;
+      }
+    },
     checkIfOwnMessage(message) {
       return this.user && this.user._id === message.messageUser._id;
+    },
+    handleToggleLike() {
+      if (this.postLiked) {
+        this.handleUnlikePost();
+      } else {
+        this.handleLikePost();
+      }
+    },
+    handleLikePost() {
+      const variables = {
+        postId: this.postId,
+        username: this.user.username
+      };
+      this.$apollo
+        .mutate({
+          mutation: LIKE_POST,
+          variables,
+          update: cache => {
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: { postId: this.postId }
+            });
+            data.getPost.likes += 1;
+
+            cache.writeQuery({
+              query: GET_POST,
+              variables: { postId: this.postId },
+              data
+            });
+          }
+        })
+        .then(({ data: { likePost } }) => {
+          const updatedUser = { ...this.user, favorites: likePost.favorites };
+          this.$store.commit('setUser', updatedUser);
+        })
+        .catch(({ message }) => {
+          console.log('MESSAGE: ', message);
+        });
+    },
+    handleUnlikePost() {
+      const variables = {
+        postId: this.postId,
+        username: this.user.username
+      };
+      this.$apollo
+        .mutate({
+          mutation: UNLIKE_POST,
+          variables,
+          update: cache => {
+            const data = cache.readQuery({
+              query: GET_POST,
+              variables: { postId: this.postId }
+            });
+            data.getPost.likes -= 1;
+
+            cache.writeQuery({
+              query: GET_POST,
+              variables: { postId: this.postId },
+              data
+            });
+          }
+        })
+        .then(({ data: { unlikePost } }) => {
+          const updatedUser = { ...this.user, favorites: unlikePost.favorites };
+          this.$store.commit('setUser', updatedUser);
+        })
+        .catch(({ message }) => {
+          console.log('MESSAGE: ', message);
+        });
     },
     handleCommentOnPost() {
       if (this.$refs.form.validate()) {

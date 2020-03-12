@@ -64,3 +64,31 @@ export const ADD_POST_COMMENT = gql`
     }
   }
 `;
+
+// Like a post
+export const LIKE_POST = gql`
+  mutation($postId: ID!, $username: String!) {
+    likePost(postId: $postId, username: $username) {
+      likes
+      favorites {
+        _id
+        title
+        imageUrl
+      }
+    }
+  }
+`;
+
+// Unlike a post
+export const UNLIKE_POST = gql`
+  mutation($postId: ID!, $username: String!) {
+    unlikePost(postId: $postId, username: $username) {
+      likes
+      favorites {
+        _id
+        title
+        imageUrl
+      }
+    }
+  }
+`;

@@ -172,7 +172,8 @@ export default new Vuex.Store({
     colors: state => state.colors,
     authError: state => state.authError,
     pageError: state => state.pageError,
-    formError: state => state.formError
+    formError: state => state.formError,
+    userFavorites: state => state.user && state.user.favorites
   },
   modules: {}
 });

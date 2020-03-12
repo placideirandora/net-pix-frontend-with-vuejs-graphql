@@ -41,6 +41,12 @@ type PostsPage {
   hasMore: Boolean
 }
 
+# Define likes and favorites
+type LikesFaves {
+  likes: Int
+  favorites: [Post]
+}
+
 # Define queries
 type Query {
   getCurrentUser: User
@@ -61,4 +67,6 @@ type Mutation {
   registerUser(username: String!, email: String!, password: String!): Token
   loginUser(username: String!, password: String!): Token
   addPostComment(commentBody: String!, postId: ID!, userId: ID!): Message!
+  likePost(postId: ID!, username: String!): LikesFaves!
+  unlikePost(postId: ID!, username: String!): LikesFaves!
 }
