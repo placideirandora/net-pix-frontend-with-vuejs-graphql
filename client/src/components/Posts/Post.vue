@@ -5,7 +5,17 @@
         <v-layout>
           <h1>{{ getPost.title.toUpperCase() }}</h1>
           <v-spacer />
-          <v-icon :color="colors.secondary" large @click="goToPreviousPage">mdi-arrow-left-circle-outline</v-icon>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-icon
+                v-on="on"
+                :color="colors.secondary"
+                large
+                @click="goToPreviousPage"
+              >mdi-arrow-left-circle</v-icon>
+            </template>
+            <span>Go back</span>
+          </v-tooltip>
         </v-layout>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -33,12 +43,73 @@
           <v-spacer />
           <h4 class="mt-3 font-weight-thin text-right">{{ getPost.likes }} Likes</h4>
           <v-btn large icon v-if="user" class="ml-5">
-            <v-icon large style="font-size: 30px;" :color="favorite ? 'error' : 'grey'">mdi-heart-circle-outline</v-icon>
+            <v-icon
+              large
+              style="font-size: 26px;"
+              :color="bookmarked ? colors.secondary : 'grey'"
+            >{{ bookmarked ? 'mdi-bookmark' : 'mdi-bookmark-outline' }}</v-icon>
           </v-btn>
         </v-layout>
         <v-layout>
           <p class="body-1">{{ getPost.description }}</p>
         </v-layout>
+      </v-flex>
+    </v-layout>
+    <v-divider />
+    <v-layout row wrap>
+      <v-flex xs12>
+        <v-list-group subheader two-line>
+          <v-subheader>{{ getPost.messages.length > 0 ? ( getPost.messages.length === 1 ? '1 Comment' : `${getPost.messages.length} comments` ) : '0 comments' }}</v-subheader>
+          <template v-for="message in getPost.messages">
+            <v-divider :key="message._id" />
+            <v-list-item inset :key="message.title">
+              <v-list-item-avatar>
+                <v-img :src="message.messageUser.avatar"></v-img>
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title>{{ message.messageBody }}</v-list-item-title>
+                <v-list-item-subtitle>{{ message.messageUser.username }}</v-list-item-subtitle>
+                <span
+                  class="grey--text text--lighten-1 hidden-xs-only"
+                >{{ message.messageDate.slice(0, 21) }}</span>
+              </v-list-item-content>
+              <v-list-item-action class="hidden-xs-only">
+                <v-icon :color="checkIfOwnMessage(message) ? colors.secondary : 'grey' ">mdi-chat</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+          </template>
+        </v-list-group>
+      </v-flex>
+    </v-layout>
+    <v-layout class="mb-3" v-if="user">
+      <v-flex xs12>
+        <v-form
+          v-model="isFormValid"
+          lazy-validation
+          ref="form"
+          @submit.prevent="handleCommentOnPost"
+        >
+          <v-layout row>
+            <v-flex xs12>
+              <v-text-field
+                :color="colors.secondary"
+                :rules="commentRules"
+                clearable
+                prepend-icon="mdi-comment-processing"
+                :append-outer-icon="comment ? 'mdi-send-circle' : null"
+                @click:append-outer="handleCommentOnPost"
+                label="Add comment"
+                v-model="comment"
+                required
+              ></v-text-field>
+            </v-flex>
+          </v-layout>
+        </v-form>
+      </v-flex>
+    </v-layout>
+    <v-layout class="mt-4" v-if="!user">
+      <v-flex xs12>
+        <h5 class="text-uppercase grey--text">Sign in to comment on, like, or bookmark this post</h5>
       </v-flex>
     </v-layout>
   </v-container>
@@ -47,6 +118,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { GET_POST } from '../../graphql/queries';
+import { ADD_POST_COMMENT } from '../../graphql/mutations';
 
 export default {
   name: 'Post',
@@ -54,7 +126,15 @@ export default {
   data() {
     return {
       dialog: false,
-      favorite: false
+      bookmarked: false,
+      isFormValid: true,
+      comment: '',
+      commentRules: [
+        comment => !!comment || 'Comment is required',
+        comment =>
+          (comment.length > 0 && comment.length <= 80) ||
+          'Comment should not exceed 80 characters'
+      ]
     };
   },
   computed: {
@@ -66,6 +146,39 @@ export default {
     },
     toggleImageDialog() {
       this.dialog = !this.dialog;
+    },
+    checkIfOwnMessage(message) {
+      return this.user && this.user._id === message.messageUser._id;
+    },
+    handleCommentOnPost() {
+      if (this.$refs.form.validate()) {
+        const variables = {
+          commentBody: this.comment,
+          postId: this.postId,
+          userId: this.user._id
+        };
+        this.$apollo
+          .mutate({
+            mutation: ADD_POST_COMMENT,
+            variables,
+            update: (cache, { data: { addPostComment } }) => {
+              const data = cache.readQuery({
+                query: GET_POST,
+                variables: { postId: this.postId }
+              });
+              data.getPost.messages.unshift(addPostComment);
+
+              cache.writeQuery({
+                query: GET_POST,
+                variables: { postId: this.postId },
+                data
+              });
+            }
+          })
+          .then(() => {
+            this.$refs.form.reset();
+          });
+      }
     }
   },
   apollo: {

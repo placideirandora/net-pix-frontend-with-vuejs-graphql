@@ -58,8 +58,7 @@ type Mutation {
     description: String!
     creatorId: ID!
   ): Post!
-
   registerUser(username: String!, email: String!, password: String!): Token
-
   loginUser(username: String!, password: String!): Token
+  addPostComment(commentBody: String!, postId: ID!, userId: ID!): Message!
 }

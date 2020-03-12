@@ -15,7 +15,7 @@
                 <div class="body-1">{{ post.title }}</div>
                 <span
                   class="grey--text body-1"
-                >{{ post.likes }} Likes - {{ post.messages.length }} Comments</span>
+                >{{ post.likes > 0 ? ( post.likes === 1 ? '1 Like' : `${post.likes} Likes` ) : '0 likes' }} - {{ post.messages.length > 0 ? ( post.messages.length === 1 ? '1 Comment' : `${post.messages.length} comments` ) : '0 comments' }}</span>
               </div>
             </v-card-title>
             <v-spacer />
@@ -23,9 +23,9 @@
               <v-icon>{{ showExcerpt ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
             </v-btn>
           </v-card-actions>
-          <v-expand v-if="showExcerpt">
+          <v-menu-transition transition="slide-y-transition" v-if="showExcerpt">
             <v-card-text class="grey lighten-4">
-              <v-list-item avatar>
+              <v-list-item>
                 <v-list-item-avatar>
                   <v-img :src="post.createdBy.avatar" alt="Author Avatar" />
                 </v-list-item-avatar>
@@ -40,7 +40,7 @@
                 </v-list-item-action>
               </v-list-item>
             </v-card-text>
-          </v-expand>
+          </v-menu-transition>
         </v-card>
       </v-flex>
     </v-layout>

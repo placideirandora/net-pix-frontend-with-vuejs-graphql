@@ -44,3 +44,23 @@ export const PUBLISH_POST = gql`
     }
   }
 `;
+
+// Comment on a post
+export const ADD_POST_COMMENT = gql`
+  mutation($commentBody: String!, $postId: ID!, $userId: ID!) {
+    addPostComment(
+      commentBody: $commentBody
+      postId: $postId
+      userId: $userId
+    ) {
+      _id
+      messageBody
+      messageDate
+      messageUser {
+        _id
+        username
+        avatar
+      }
+    }
+  }
+`;

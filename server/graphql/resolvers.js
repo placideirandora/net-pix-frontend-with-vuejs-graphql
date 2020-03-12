@@ -106,6 +106,23 @@ module.exports = {
         createdBy: creatorId
       }).save();
       return newPost;
+    },
+    addPostComment: async (_, { commentBody, postId, userId }, { Post }) => {
+      const newComment = {
+        messageBody: commentBody,
+        messageUser: userId
+      };
+
+      const post = await Post.findOneAndUpdate(
+        { _id: postId },
+        { $push: { messages: { $each: [newComment], $position: 0 } } },
+        { new: true }
+      ).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      });
+
+      return post.messages[0];
     }
   }
 };
