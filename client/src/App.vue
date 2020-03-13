@@ -1,44 +1,10 @@
 <template>
   <v-app class="app">
-    <v-app-bar app dark :color="colors.primary">
-      <v-app-bar-nav-icon @click="toggleSideNav" class="ml-1 mr-4" />
-      <!-- Implement The Navigation Drawer -->
-      <v-toolbar-title class="hidden-xs-only title">
-        <router-link to="/" tag="span" class="app__router">NETPIX</router-link>
-      </v-toolbar-title>
-      <v-spacer />
-      <v-text-field
-        flex
-        prepend-icon="search"
-        placeholder="SEARCH POSTS"
-        single-line
-        high-details
-        class="mt-4"
-        clearable
-      />
-      <v-spacer />
-      <v-toolbar-items class="hidden-xs-only">
-        <v-btn
-          color="#004385"
-          v-for="(item, index) in horizontalNavItems"
-          :key="index"
-          :to="item.link"
-        >
-          <v-icon left class="hidden-xs-only">{{ item.icon }}</v-icon>
-          {{ item.title }}
-        </v-btn>
-        <v-btn color="#004385" to="/profile" v-if="user">
-          <v-icon left class="hidden-xs-only">mdi-account-box</v-icon>
-          <v-badge right color="blue darken-2" :class="{'app__bounce' : badgeAnimated}">
-            <span slot="badge" v-if="userFavorites.length">{{ userFavorites.length }}</span>
-            Profile
-          </v-badge>
-        </v-btn>
-        <v-btn color="#004385" v-if="user" @click="handleSignoutUser">
-          <v-icon left lass="hidden-xs-only">mdi-logout-variant</v-icon>Sign Out
-        </v-btn>
-      </v-toolbar-items>
-    </v-app-bar>
+    <NavBar
+      :navMenus="horizontalNavMenus"
+      :badgeAnimated="badgeAnimated"
+      :signoutUser="handleSignoutUser"
+    />
     <v-content>
       <v-container>
         <transition name="fade">
@@ -68,14 +34,21 @@
         </v-snackbar>
       </v-container>
     </v-content>
+    <Footer />
   </v-app>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import NavBar from './components/Shared/NavBar';
+import Footer from './components/Shared/Footer';
 
 export default {
   name: 'App',
+  components: {
+    NavBar,
+    Footer
+  },
   data() {
     return {
       sideNav: false,
@@ -136,15 +109,15 @@ export default {
       'published',
       'userFavorites'
     ]),
-    horizontalNavItems() {
-      let items = [
+    horizontalNavMenus() {
+      let menus = [
         { icon: 'mdi-message', title: 'Posts', link: '/posts' },
         { icon: 'mdi-login-variant', title: 'Sign In', link: '/signin' },
         { icon: 'mdi-account-plus', title: 'Sign Up', link: '/signup' }
       ];
 
       if (this.user) {
-        items = [
+        menus = [
           { icon: 'mdi-message', title: 'Posts', link: '/posts' },
           {
             icon: 'mdi-message-plus',
@@ -154,7 +127,7 @@ export default {
         ];
       }
 
-      return items;
+      return menus;
     },
     sideNavItems() {
       return [
@@ -165,6 +138,7 @@ export default {
     }
   },
   methods: {
+    // Implement side nav
     toggleSideNav() {
       this.sideNav = !this.sideNav;
     },
