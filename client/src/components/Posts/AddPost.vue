@@ -1,6 +1,6 @@
 <template>
   <v-container class="app text-center text-uppercase">
-    <img src="../../assets/publish-post.svg" alt="authentication" width="300" height="200" />
+    <img src="../../assets/post.svg" alt="authentication" width="300" height="200" />
     <v-layout row wrap>
       <v-flex xs12 sm6 offset-sm3>
         <h1 class="app__title">Publish A Post</h1>
@@ -113,8 +113,11 @@ export default {
       descriptionRules: [
         description => !!description || 'Description is required',
         description =>
-          (description.length >= 100 && description.length <= 1000) ||
-          'Description cannot be less than 100 or greater than 1000 characters'
+          description.length >= 100 ||
+          'Description cannot be less than 100 characters',
+        description =>
+          description.length <= 2000 ||
+          'Description cannot be  greater than 2000 characters'
       ],
       imgUrlRules: [imgUrl => !!imgUrl || 'Image URL is required'],
       categoryRules: [

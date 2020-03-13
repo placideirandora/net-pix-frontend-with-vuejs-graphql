@@ -35,7 +35,7 @@ const getUser = async token => {
     try {
       return await jwt.verify(token.slice(7), process.env.SECRET);
     } catch (error) {
-      throw new AuthenticationError('Your session has expired. Please, Sign in again.');
+      throw new AuthenticationError('Your session has expired. Please, sign in again.');
     }
   }
 };

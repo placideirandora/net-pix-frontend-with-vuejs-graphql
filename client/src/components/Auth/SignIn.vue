@@ -1,6 +1,6 @@
 <template>
   <v-container class="app text-center text-uppercase">
-    <img src="../../assets/auth.svg" alt="authentication" width="300" height="200" />
+    <img src="../../assets/welcome.svg" alt="authentication" width="300" height="200" />
     <v-layout row wrap>
       <v-flex xs12 sm6 offset-sm3>
         <h1 class="app__title">Welcome Back</h1>

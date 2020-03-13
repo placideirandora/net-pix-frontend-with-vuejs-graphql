@@ -69,7 +69,7 @@ module.exports = {
 
       if (user) {
         throw new Error(
-          `Username - ${user.username} - already exists. Choose another`
+          `Username - ${user.username} - already exists. Please, choose another.`
         );
       }
 
