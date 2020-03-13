@@ -71,13 +71,13 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{ message.messageBody }}</v-list-item-title>
-                <v-list-item-subtitle>{{ message.messageUser.username }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ message.messageUser.username.toUpperCase() }}</v-list-item-subtitle>
                 <span
                   class="grey--text text--lighten-1 hidden-xs-only"
                 >{{ message.messageDate.slice(0, 21) }}</span>
               </v-list-item-content>
               <v-list-item-action class="hidden-xs-only">
-                <v-icon :color="checkIfOwnMessage(message) ? colors.secondary : 'grey' ">mdi-chat</v-icon>
+                <v-icon :color="checkIfOwnComment(message) ? colors.secondary : 'grey' ">mdi-chat</v-icon>
               </v-list-item-action>
             </v-list-item>
           </template>
@@ -167,8 +167,8 @@ export default {
         return false;
       }
     },
-    checkIfOwnMessage(message) {
-      return this.user && this.user._id === message.messageUser._id;
+    checkIfOwnComment(comment) {
+      return this.user && this.user._id === comment.messageUser._id;
     },
     handleToggleLike() {
       if (this.postLiked) {

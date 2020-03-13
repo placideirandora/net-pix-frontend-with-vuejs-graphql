@@ -26,6 +26,13 @@
           <v-icon left class="hidden-xs-only">{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
+        <v-btn color="#004385" to="/profile" v-if="user">
+          <v-icon left class="hidden-xs-only">mdi-account-box</v-icon>
+          <v-badge right color="blue darken-2" :class="{'app__bounce' : badgeAnimated}">
+            <span slot="badge" v-if="userFavorites.length">{{ userFavorites.length }}</span>
+            Profile
+          </v-badge>
+        </v-btn>
         <v-btn color="#004385" v-if="user" @click="handleSignoutUser">
           <v-icon left lass="hidden-xs-only">mdi-logout-variant</v-icon>Sign Out
         </v-btn>
@@ -76,7 +83,8 @@ export default {
       postSnackbar: false,
       notification: null,
       colorType: null,
-      icon: null
+      icon: null,
+      badgeAnimated: false
     };
   },
   watch: {
@@ -111,10 +119,22 @@ export default {
 
         name !== 'SignIn' ? this.$router.push({ name: 'SignIn' }) : null;
       }
+    },
+    userFavorites(newValue) {
+      if (newValue) {
+        this.badgeAnimated = true;
+        setTimeout(() => (this.badgeAnimated = false), 1000);
+      }
     }
   },
   computed: {
-    ...mapGetters(['colors', 'user', 'authError', 'published']),
+    ...mapGetters([
+      'colors',
+      'user',
+      'authError',
+      'published',
+      'userFavorites'
+    ]),
     horizontalNavItems() {
       let items = [
         { icon: 'mdi-message', title: 'Posts', link: '/posts' },
@@ -125,8 +145,11 @@ export default {
       if (this.user) {
         items = [
           { icon: 'mdi-message', title: 'Posts', link: '/posts' },
-          { icon: 'mdi-message-plus', title: 'Publish Post', link: '/add-post' },
-          { icon: 'mdi-account-box', title: 'profile', link: '/profile' }
+          {
+            icon: 'mdi-message-plus',
+            title: 'Publish Post',
+            link: '/add-post'
+          }
         ];
       }
 
@@ -158,6 +181,31 @@ export default {
   }
   &__router {
     cursor: pointer;
+  }
+
+  &__bounce {
+    animation: bounce 1s both;
+  }
+
+  @keyframes bounce {
+    0%,
+    20%,
+    30%,
+    53%,
+    80%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    40%,
+    43% {
+      transform: translate3d(0, -30%, 0);
+    }
+    70% {
+      transform: translate3d(0, -20%, 0);
+    }
+    90% {
+      transform: translate3d(0, -6px, 0);
+    }
   }
 
   .fade-enter-active,
