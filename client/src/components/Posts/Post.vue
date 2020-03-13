@@ -140,8 +140,8 @@ export default {
       commentRules: [
         comment => !!comment || 'Comment is required',
         comment =>
-          (comment.length > 0 && comment.length <= 80) ||
-          'Comment should not exceed 80 characters'
+          (comment.length > 0 && comment.length <= 200) ||
+          'Comment should not exceed 200 characters'
       ]
     };
   },

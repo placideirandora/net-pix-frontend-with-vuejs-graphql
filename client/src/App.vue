@@ -1,6 +1,6 @@
 <template>
   <v-app class="app">
-    <v-toolbar fixed dark class="app__toolbar" :color="colors.primary">
+    <v-app-bar app dark :color="colors.primary">
       <v-app-bar-nav-icon @click="toggleSideNav" class="ml-1 mr-4" />
       <!-- Implement The Navigation Drawer -->
       <v-toolbar-title class="hidden-xs-only title">
@@ -14,6 +14,7 @@
         single-line
         high-details
         class="mt-4"
+        clearable
       />
       <v-spacer />
       <v-toolbar-items class="hidden-xs-only">
@@ -37,8 +38,8 @@
           <v-icon left lass="hidden-xs-only">mdi-logout-variant</v-icon>Sign Out
         </v-btn>
       </v-toolbar-items>
-    </v-toolbar>
-    <main>
+    </v-app-bar>
+    <v-content>
       <v-container>
         <transition name="fade">
           <router-view />
@@ -49,7 +50,7 @@
           <v-btn @click="authSnackbar = false">Close</v-btn>
         </v-snackbar>
         <v-snackbar color="success" bottom left :timeout="5000" v-model="postSnackbar">
-          <v-icon class="mr-3" color="white">mdi-check-circle</v-icon>
+          <v-icon class="mr-3" color="white">mdi-c`ck-circle</v-icon>
           <h3>You have published the post.</h3>
           <v-btn @click="postSnackbar = false">Close</v-btn>
         </v-snackbar>
@@ -66,7 +67,7 @@
           <v-btn @click="authErrorSnackbar = false">Close</v-btn>
         </v-snackbar>
       </v-container>
-    </main>
+    </v-content>
   </v-app>
 </template>
 
@@ -176,9 +177,6 @@ export default {
 
 <style lang="scss">
 .app {
-  &__toolbar {
-    max-height: 4.2rem;
-  }
   &__router {
     cursor: pointer;
   }
@@ -207,21 +205,21 @@ export default {
       transform: translate3d(0, -6px, 0);
     }
   }
+}
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition-property: all;
-    transition-duration: 0.25s;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition-property: all;
+  transition-duration: 0.25s;
+}
 
-  .fade-enter-active {
-    transition-delay: 0.25s;
-  }
+.fade-enter-active {
+  transition-delay: 0.25s;
+}
 
-  .fade-enter,
-  .fade-leave-active {
-    opacity: 0;
-    transform: translateX(-25px);
-  }
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+  transform: translateX(-25px);
 }
 </style>
