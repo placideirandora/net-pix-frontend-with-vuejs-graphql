@@ -1,28 +1,38 @@
 <template>
   <v-container class="home">
-    <div v-if="loading" class="home__loader">
-      <ContentLoader />
-    </div>
-    <div v-else-if="!loading && pageError">
-      <ServerError :message="pageError" />
-    </div>
-    <div v-else-if="!loading && posts.length > 0">
-      <v-flex xs12>
-        <v-carousel :max="6" v-bind="{ 'cycle': true }" interval="5000">
+    <v-row v-if="loading" class="home__loader">
+      <v-col>
+        <ContentLoader />
+      </v-col>
+    </v-row>
+
+    <v-row v-else-if="!loading && pageError">
+      <v-col>
+        <ServerError :message="pageError" />
+      </v-col>
+    </v-row>
+
+    <v-row v-else-if="!loading && posts.length > 0">
+      <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
+        <v-carousel v-bind="{ 'cycle': true }" interval="5000">
           <v-carousel-item
             v-for="post in posts"
             :key="post._id"
             :src="post.imageUrl"
             @click.native="goToPost(post._id)"
           >
-            <h2 class="home__title">{{ post.title }}</h2>
+            <h1 class="home__title" v-if="!breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h1>
+            <h2 class="home__title" v-if="breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h2>
           </v-carousel-item>
         </v-carousel>
-      </v-flex>
-    </div>
-    <div v-else>
-      <ServerError :message="pageError" />
-    </div>
+      </v-col>
+    </v-row>
+
+    <v-row v-else>
+      <v-col>
+        <ServerError :message="pageError" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -38,7 +48,10 @@ export default {
     ServerError
   },
   computed: {
-    ...mapGetters(['loading', 'posts', 'pageError', 'authError'])
+    ...mapGetters(['loading', 'posts', 'pageError', 'authError']),
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
   },
   methods: {
     handleGetCarouselPosts() {

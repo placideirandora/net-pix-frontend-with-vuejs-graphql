@@ -1,9 +1,15 @@
 <template>
-  <v-container v-if="getPost" flexbox center>
-    <v-layout row wrap>
-      <v-flex xs12>
+  <v-container>
+    <v-row v-if="this.$apollo.loading">
+      <v-col>
+        <ContentLoader />
+      </v-col>
+    </v-row>
+    <v-row v-else-if="getPost">
+      <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
         <v-layout>
-          <h1>{{ getPost.title.toUpperCase() }}</h1>
+          <h1 v-if="!breakPoint.xsOnly">{{ getPost.title.toUpperCase() }}</h1>
+          <h2 v-if="breakPoint.xsOnly">{{ getPost.title.toUpperCase() }}</h2>
           <v-spacer />
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
@@ -12,6 +18,7 @@
                 :color="colors.secondary"
                 large
                 @click="goToPreviousPage"
+                class="hidden-xs-only"
               >mdi-arrow-left-circle</v-icon>
             </template>
             <span>Go back</span>
@@ -21,8 +28,7 @@
           <template v-slot:activator="{ on }">
             <v-img
               v-on="on"
-              class="white--text align-end"
-              height="45vh"
+              max-height="45vh"
               :src="getPost.imageUrl"
               @click="toggleImageDialog"
             />
@@ -56,12 +62,10 @@
         <v-layout>
           <p class="body-1">{{ getPost.description }}</p>
         </v-layout>
-      </v-flex>
-    </v-layout>
-    <v-divider />
-    <v-layout row wrap>
-      <v-flex xs12>
-        <v-list-group subheader two-line>
+      </v-col>
+
+      <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
+        <v-list subheader two-line>
           <v-subheader>{{ getPost.messages.length > 0 ? ( getPost.messages.length === 1 ? '1 Comment' : `${getPost.messages.length} comments` ) : '0 Comments' }}</v-subheader>
           <template v-for="message in getPost.messages">
             <v-divider :key="message._id" />
@@ -81,19 +85,22 @@
               </v-list-item-action>
             </v-list-item>
           </template>
-        </v-list-group>
-      </v-flex>
-    </v-layout>
-    <v-layout class="mb-3" v-if="user">
-      <v-flex xs12>
+        </v-list>
+      </v-col>
+    </v-row>
+
+    <v-divider />
+
+    <v-row class="mb-3" v-if="user && getPost">
+      <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
         <v-form
           v-model="isFormValid"
           lazy-validation
           ref="form"
           @submit.prevent="handleCommentOnPost"
         >
-          <v-layout row>
-            <v-flex xs12>
+          <v-row>
+            <v-col>
               <v-text-field
                 :color="colors.secondary"
                 :rules="commentRules"
@@ -105,31 +112,39 @@
                 v-model="comment"
                 required
               ></v-text-field>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-form>
-      </v-flex>
-    </v-layout>
-    <v-layout class="mt-4" v-if="!user">
-      <v-flex xs12>
-        <h5 class="text-uppercase grey--text">Sign in to like or comment on this post</h5>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
+
+    <v-row class="mt-4" v-if="!user">
+      <v-col sm="11" :class="breakPoint.smAndDown ? 'mx-auto' : null">
+        <router-link to="/signin" style="text-decoration: none">
+          <h5 class="text-uppercase grey--text">Sign in to like or comment on this post</h5>
+        </router-link>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+
 import { GET_POST } from '../../graphql/queries';
 import {
   ADD_POST_COMMENT,
   LIKE_POST,
   UNLIKE_POST
 } from '../../graphql/mutations';
+import ContentLoader from '../Shared/ContentLoader';
 
 export default {
   name: 'Post',
   props: ['postId'],
+  components: {
+    ContentLoader
+  },
   data() {
     return {
       dialog: false,
@@ -146,7 +161,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'colors', 'userFavorites'])
+    ...mapGetters(['user', 'colors', 'userFavorites']),
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
   },
   methods: {
     goToPreviousPage() {

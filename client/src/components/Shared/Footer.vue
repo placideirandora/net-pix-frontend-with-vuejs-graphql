@@ -1,10 +1,12 @@
 <template>
   <v-footer>
-    <v-col class="text-center" cols="12">
-      &copy; {{ new Date().getFullYear() }} --
-      <strong>NETPIX</strong>
-      -- Placide IRANDORA
-    </v-col>
+    <v-row>
+      <v-col class="text-center">
+        &copy; {{ new Date().getFullYear() }} --
+        <strong>NETPIX</strong>
+        -- Placide IRANDORA
+      </v-col>
+    </v-row>
   </v-footer>
 </template>
 

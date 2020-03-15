@@ -1,7 +1,20 @@
 <template>
-  <v-container fluid grid-list-xl>
-    <v-layout row wrap v-if="infiniteScrollPosts">
-      <v-flex xs12 sm6 v-for="post in infiniteScrollPosts.posts" :key="post._id">
+  <v-container>
+    <v-row v-if="this.$apollo.loading">
+      <v-col>
+        <ContentLoader />
+      </v-col>
+    </v-row>
+    <v-row v-if="infiniteScrollPosts">
+      <v-col
+        v-for="post in infiniteScrollPosts.posts"
+        :key="post._id"
+        sm="10"
+        md="6"
+        lg="6"
+        xl="4"
+        :class="breakPoint.smAndDown ? 'mx-auto' : null"
+      >
         <v-card hover class="text-uppercase">
           <v-img
             class="white--text align-end"
@@ -42,26 +55,28 @@
             </v-card-text>
           </v-menu-transition>
         </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout v-if="showMoreEnabled" column>
-      <v-flex xs12>
-        <v-layout justify-center row>
+      </v-col>
+      <v-col v-if="showMoreEnabled">
+        <v-layout justify-center>
           <v-btn :color="colors.secondary" @click="showMorePosts" dark class="mt-4">Show more posts</v-btn>
         </v-layout>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import { INFINITE_SCROLL_POSTS } from '../../graphql/queries';
+import ContentLoader from '../Shared/ContentLoader';
 
-const pageSize = 2;
+const pageSize = 4;
 
 export default {
   name: 'Posts',
+  components: {
+    ContentLoader
+  },
   data() {
     return {
       pageNum: 1,
@@ -70,7 +85,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['colors'])
+    ...mapGetters(['colors']),
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
   },
   apollo: {
     infiniteScrollPosts: {

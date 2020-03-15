@@ -1,85 +1,100 @@
 <template>
   <v-container class="app text-center text-uppercase">
-    <img src="../../assets/get-started.svg" alt="authentication" width="300" height="200" />
-    <v-layout row wrap>
-      <v-flex xs12 sm6 offset-sm3>
+    <v-row>
+      <v-col>
+        <img
+          src="../../assets/get-started.svg"
+          alt="authentication"
+          :width="breakPoint.smAndDown ? 250 : 300"
+          height="200"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
         <h1 class="app__title">Get Started</h1>
         <FormAlert :message="formError" type="error" color="error" v-if="formError" />
-      </v-flex>
-    </v-layout>
-    <v-card width="750" class="mx-auto" :color="colors.formBackground">
-      <v-card-text>
-        <v-form v-model="isFormValid" lazy-validation ref="form">
-          <v-text-field
-            :color="colors.secondary"
-            :rules="usernameRules"
-            label="Username"
-            prepend-icon="mdi-account-circle"
-            :clearable="true"
-            v-model="username"
-            autocomplete="off"
-          />
-          <v-text-field
-            :color="colors.secondary"
-            :rules="emailRules"
-            label="Email"
-            prepend-icon="mdi-email"
-            :clearable="true"
-            v-model="email"
-            autocomplete="off"
-          />
-          <v-text-field
-            :color="colors.secondary"
-            :rules="passwordRules"
-            label="Password"
-            :type="showPassword ? 'text' : 'password'"
-            prepend-icon="mdi-lock"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :clearable="true"
-            @click:append="showPassword = !showPassword"
-            v-model="password"
-          />
-          <v-text-field
-            :color="colors.secondary"
-            :rules="passwordConfRules"
-            label="Confirm Password"
-            :type="showPassword ? 'text' : 'password'"
-            prepend-icon="mdi-gavel"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :clearable="true"
-            @click:append="showPassword = !showPassword"
-            v-model="passwordConfirmation"
-          />
-        </v-form>
-      </v-card-text>
-      <v-divider />
-      <v-card-actions>
-        <v-btn
-          class="ma-2"
-          :color="colors.secondary"
-          dark
-          :loading="loading"
-          :disabled="!isFormValid"
-          @click="handleSignupUser"
-        >
-          Continue
-          <template v-slot:loader>
-            <span class="custom-loader">
-              <v-icon light>cached</v-icon>
-            </span>
-          </template>
-          <v-icon dark right>mdi-arrow-right</v-icon>
-        </v-btn>
-        <v-spacer />
-        <v-container class="text-right caption">
-          <router-link
-            to="/signin"
-            tag="span"
-            class="app__router mr-2"
-          >Already Have An Account? Sign In</router-link>
-        </v-container>
-      </v-card-actions>
-    </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col sm="10" md="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
+        <v-card width="750" class="mx-auto" :color="colors.formBackground">
+          <v-card-text>
+            <v-form v-model="isFormValid" lazy-validation ref="form">
+              <v-text-field
+                :color="colors.secondary"
+                :rules="usernameRules"
+                label="Username"
+                prepend-icon="mdi-account-circle"
+                :clearable="true"
+                v-model="username"
+                autocomplete="off"
+              />
+              <v-text-field
+                :color="colors.secondary"
+                :rules="emailRules"
+                label="Email"
+                prepend-icon="mdi-email"
+                :clearable="true"
+                v-model="email"
+                autocomplete="off"
+              />
+              <v-text-field
+                :color="colors.secondary"
+                :rules="passwordRules"
+                label="Password"
+                :type="showPassword ? 'text' : 'password'"
+                prepend-icon="mdi-lock"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :clearable="true"
+                @click:append="showPassword = !showPassword"
+                v-model="password"
+              />
+              <v-text-field
+                :color="colors.secondary"
+                :rules="passwordConfRules"
+                label="Confirm Password"
+                :type="showPassword ? 'text' : 'password'"
+                prepend-icon="mdi-gavel"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :clearable="true"
+                @click:append="showPassword = !showPassword"
+                v-model="passwordConfirmation"
+              />
+            </v-form>
+          </v-card-text>
+          <v-divider />
+          <v-card-actions>
+            <v-btn
+              class="ma-2"
+              :color="colors.secondary"
+              dark
+              :loading="loading"
+              :disabled="!isFormValid"
+              @click="handleSignupUser"
+            >
+              Continue
+              <template v-slot:loader>
+                <span class="custom-loader">
+                  <v-icon light>cached</v-icon>
+                </span>
+              </template>
+              <v-icon dark right>mdi-arrow-right</v-icon>
+            </v-btn>
+            <v-spacer />
+            <v-container class="text-right caption">
+              <router-link
+                to="/signin"
+                tag="span"
+                class="app__router mr-2"
+              >Already Have An Account? Sign In</router-link>
+            </v-container>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -122,7 +137,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['colors', 'loading', 'user', 'formError'])
+    ...mapGetters(['colors', 'loading', 'user', 'formError']),
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
   },
   watch: {
     user() {
