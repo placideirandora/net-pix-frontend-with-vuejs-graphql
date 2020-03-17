@@ -10,28 +10,38 @@
         <transition name="fade">
           <router-view />
         </transition>
-        <v-snackbar :color="colorType" bottom left :timeout="5000" v-model="authSnackbar">
-          <v-icon class="mr-3" color="white">{{ icon }}</v-icon>
-          <h3>{{ notification }}</h3>
-          <v-btn @click="authSnackbar = false">Close</v-btn>
-        </v-snackbar>
-        <v-snackbar color="success" bottom left :timeout="5000" v-model="postSnackbar">
-          <v-icon class="mr-3" color="white">mdi-c`ck-circle</v-icon>
-          <h3>You have published the post.</h3>
-          <v-btn @click="postSnackbar = false">Close</v-btn>
-        </v-snackbar>
-        <v-snackbar
-          color="warning"
-          bottom
-          left
-          :timeout="8000"
-          v-model="authErrorSnackbar"
+
+        <Notification
+          :message="notification"
+          :messageType="type"
+          v-if="authSnackbarIn"
+          :icon="icon"
+          :duration="4000"
+        />
+
+        <Notification
+          :message="notification"
+          :messageType="type"
+          v-if="authSnackbarOut"
+          :icon="icon"
+          :duration="4000"
+        />
+
+        <Notification
+          :message="notification"
+          :messageType="type"
+          v-if="published"
+          :icon="icon"
+          :duration="5000"
+        />
+
+        <Notification
+          :message="authError"
+          :messageType="type"
           v-if="authError"
-        >
-          <v-icon class="mr-3" color="white">mdi-alert-circle</v-icon>
-          <h3>{{ authError }}</h3>
-          <v-btn @click="authErrorSnackbar = false">Close</v-btn>
-        </v-snackbar>
+          :icon="icon"
+          :duration="5000"
+        />
       </v-container>
     </v-content>
     <Footer />
@@ -52,11 +62,11 @@ export default {
   data() {
     return {
       sideNav: false,
-      authSnackbar: false,
-      authErrorSnackbar: false,
+      authErrorSnackbarIn: false,
+      authErrorSnackbarOut: false,
       postSnackbar: false,
       notification: null,
-      colorType: null,
+      type: null,
       icon: null,
       badgeAnimated: false
     };
@@ -65,25 +75,30 @@ export default {
     user(newValue) {
       if (newValue) {
         this.icon = 'mdi-check-circle';
-        this.colorType = 'success';
-        this.notification = 'You are now signed in.';
-        this.authSnackbar = true;
+        this.type = 'success';
+        this.notification = 'You have successfully signed in.';
+        this.authSnackbarIn = true;
       } else {
         this.icon = 'mdi-information';
-        this.colorType = 'info';
-        this.notification = 'You are now signed out.';
-        this.authSnackbar = true;
+        this.type = 'info';
+        this.notification = 'You have successfully signed out.';
+        this.authSnackbarOut = true;
       }
     },
     published(newValue) {
       if (newValue) {
         this.postSnackbar = true;
+        this.notification = 'You have successfully published the post.';
+        this.icon = 'mdi-check-circle';
+        this.type = 'success';
       }
     },
     authError(newValue) {
       if (newValue) {
         localStorage.removeItem('token');
         this.authErrorSnackbar = true;
+        this.icon = 'mdi-alert-circle';
+        this.type = 'warning';
 
         const {
           history: {

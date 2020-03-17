@@ -14,7 +14,6 @@
     <v-row>
       <v-col>
         <h1 class="app__title">Welcome Back</h1>
-        <FormAlert :message="formError" type="error" color="error" v-if="formError" />
       </v-col>
     </v-row>
 
@@ -30,6 +29,7 @@
                 prepend-icon="mdi-account-circle"
                 :clearable="true"
                 v-model="username"
+                @input="hideMessage"
                 autocomplete="off"
               />
               <v-text-field
@@ -40,8 +40,9 @@
                 prepend-icon="mdi-lock"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :clearable="true"
-                @click:append="showPassword = !showPassword"
+                @click:append="handleShowPassword"
                 v-model="password"
+                @input="hideMessage"
               />
             </v-form>
           </v-card-text>
@@ -73,6 +74,13 @@
         </v-card>
       </v-col>
     </v-row>
+    <Notification
+      :message="formError"
+      messageType="error"
+      color="error"
+      v-if="formError && showMessage"
+      icon="mdi-alert-circle"
+    />
   </v-container>
 </template>
 
@@ -85,6 +93,7 @@ export default {
     return {
       username: '',
       password: '',
+      showMessage: false,
       showPassword: false,
       usernameRules: [
         username => !!username || 'Username is required',
@@ -119,7 +128,15 @@ export default {
           password: this.password
         };
         this.$store.dispatch('signinUser', credentials);
+        this.showMessage = true;
       }
+    },
+    hideMessage() {
+      this.showMessage = false;
+    },
+    handleShowPassword() {
+      this.showPassword = !this.showPassword;
+      this.hideMessage();
     }
   },
   mounted() {

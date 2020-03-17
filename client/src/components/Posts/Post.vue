@@ -116,7 +116,7 @@
     <v-row class="mt-4" v-if="!user">
       <v-col sm="11" :class="breakPoint.smAndDown ? 'mx-auto' : null">
         <router-link to="/signin" style="text-decoration: none">
-          <h5 class="text-uppercase grey--text">Sign in to like or comment on this post</h5>
+          <h5 class="text-uppercase grey--text">Sign in to comment on this post</h5>
         </router-link>
       </v-col>
     </v-row>

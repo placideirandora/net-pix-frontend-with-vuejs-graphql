@@ -79,7 +79,7 @@ module.exports = {
     },
     loginUser: async (_, { username, password }, { User }) => {
       const user = await User.findOne({ username });
-      const message = 'Incorrect username or password';
+      const message = 'Incorrect username or password.';
 
       if (!user) {
         throw new Error(message);

@@ -14,7 +14,6 @@
     <v-row>
       <v-col>
         <h1 class="app__title">Get Started</h1>
-        <FormAlert :message="formError" type="error" color="error" v-if="formError" />
       </v-col>
     </v-row>
 
@@ -60,7 +59,7 @@
                 prepend-icon="mdi-gavel"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :clearable="true"
-                @click:append="showPassword = !showPassword"
+                @click:append="handleShowPassword"
                 v-model="passwordConfirmation"
               />
             </v-form>
@@ -95,6 +94,14 @@
         </v-card>
       </v-col>
     </v-row>
+    <Notification
+      :message="formError"
+      messageType="warning"
+      color="error"
+      v-if="formError && showMessage"
+      icon="mdi-alert"
+      :duration="5000"
+    />
   </v-container>
 </template>
 
@@ -109,6 +116,7 @@ export default {
       email: '',
       password: '',
       passwordConfirmation: '',
+      showMessage: false,
       showPassword: false,
       usernameRules: [
         username => !!username || 'Username is required',
@@ -156,7 +164,15 @@ export default {
           password: this.password
         };
         this.$store.dispatch('signupUser', credentials);
+        this.showMessage = true;
       }
+    },
+    hideMessage() {
+      this.showMessage = false;
+    },
+    handleShowPassword() {
+      this.showPassword = !this.showPassword;
+      this.hideMessage();
     }
   },
   mounted() {
