@@ -26,12 +26,7 @@
         </v-layout>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-img
-              v-on="on"
-              max-height="45vh"
-              :src="getPost.imageUrl"
-              @click="toggleImageDialog"
-            />
+            <v-img v-on="on" max-height="45vh" :src="getPost.imageUrl" @click="toggleImageDialog" />
           </template>
           <span>Click to enlarge image</span>
         </v-tooltip>
@@ -137,14 +132,10 @@ import {
   LIKE_POST,
   UNLIKE_POST
 } from '../../graphql/mutations';
-import ContentLoader from '../Shared/ContentLoader';
 
 export default {
   name: 'Post',
   props: ['postId'],
-  components: {
-    ContentLoader
-  },
   data() {
     return {
       dialog: false,

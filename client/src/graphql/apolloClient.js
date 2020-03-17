@@ -15,7 +15,7 @@ Vue.use(VueApollo);
 const AUTH_TOKEN = 'token';
 
 // Http endpoint
-const httpEndpoint = 'http://localhost:5000/graphql';
+const httpEndpoint = 'http://localhost:4000/graphql';
 
 const link = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)

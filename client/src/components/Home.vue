@@ -30,7 +30,7 @@
 
     <v-row v-else>
       <v-col>
-        <ServerError :message="pageError" />
+        <DataNotFound message="There are currently no published posts to display" />
       </v-col>
     </v-row>
   </v-container>
@@ -38,13 +38,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import ContentLoader from '../components/Shared/ContentLoader';
 import ServerError from '../components/Shared/ServerError';
 
 export default {
   name: 'Home',
   components: {
-    ContentLoader,
     ServerError
   },
   computed: {

@@ -21,7 +21,10 @@
         <v-icon left class="hidden-xs-only">{{ menu.icon }}</v-icon>
         {{ menu.title }}
       </v-btn>
-      <v-btn color="#004385" to="/profile" v-if="user">
+      <v-btn color="#004385" to="/profile" v-if="user && !userFavorites.length">
+        <v-icon left class="hidden-xs-only">mdi-account-box</v-icon>Profile
+      </v-btn>
+      <v-btn color="#004385" to="/profile" v-if="user && userFavorites.length">
         <v-icon left class="hidden-xs-only">mdi-account-box</v-icon>
         <v-badge right color="blue darken-2" :class="{'app__bounce' : badgeAnimated}">
           <span slot="badge" v-if="userFavorites.length">{{ userFavorites.length }}</span>
@@ -40,7 +43,20 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'NavBar',
-  props: ['navMenus', 'badgeAnimated', 'signoutUser'],
+  props: {
+    navMenus: {
+      type: Array,
+      required: true
+    },
+    badgeAnimated: {
+      type: Boolean,
+      required: true
+    },
+    signoutUser: {
+      type: Function,
+      required: true
+    }
+  },
   computed: {
     ...mapGetters(['colors', 'user', 'userFavorites'])
   }

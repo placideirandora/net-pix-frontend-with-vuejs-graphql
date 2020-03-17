@@ -55,6 +55,6 @@ const server = new ApolloServer({
 });
 
 // Start the server
-server.listen(5000).then(({ url }) => {
+server.listen(4000).then(({ url }) => {
   console.log(`Server listening on: ${url}`);
 });

@@ -4,7 +4,7 @@
       <v-col xs="8" sm="10" md="10" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
         <v-layout justify-center>
           <img
-            src="../../assets/not-found.svg"
+            src="../../assets/no-data.svg"
             :width="breakPoint.smAndDown ? 200 : 500"
             height="300"
           />
@@ -15,8 +15,8 @@
     <v-row>
       <v-col xs="8" sm="10" md="10" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
         <v-layout justify-center>
-          <h2 v-if="!breakPoint.smAndDown" class="text-uppercase">Something bad has just happened</h2>
-          <h4 v-if="breakPoint.smAndDown" class="text-uppercase">Something bad has just happened</h4>
+          <h2 v-if="!breakPoint.smAndDown" class="text-uppercase">Data Not Found</h2>
+          <h4 v-if="breakPoint.smAndDown" class="text-uppercase">Data Not Found</h4>
         </v-layout>
       </v-col>
     </v-row>
@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  name: 'ServerError',
+  name: 'DataNotFound',
   props: {
     message: {
       type: String,

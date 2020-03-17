@@ -5,7 +5,8 @@
         <ContentLoader />
       </v-col>
     </v-row>
-    <v-row v-if="infiniteScrollPosts">
+
+    <v-row v-else-if="infiniteScrollPosts.posts.length">
       <v-col
         v-for="post in infiniteScrollPosts.posts"
         :key="post._id"
@@ -56,10 +57,16 @@
           </v-menu-transition>
         </v-card>
       </v-col>
-      <v-col v-if="showMoreEnabled">
+      <v-col v-if="infiniteScrollPosts.hasMore">
         <v-layout justify-center>
           <v-btn :color="colors.secondary" @click="showMorePosts" dark class="mt-4">Show more posts</v-btn>
         </v-layout>
+      </v-col>
+    </v-row>
+
+    <v-row v-else-if="!infiniteScrollPosts.posts.length">
+      <v-col>
+        <DataNotFound message="There are currently no published posts to display" />
       </v-col>
     </v-row>
   </v-container>
@@ -68,19 +75,14 @@
 <script>
 import { mapGetters } from 'vuex';
 import { INFINITE_SCROLL_POSTS } from '../../graphql/queries';
-import ContentLoader from '../Shared/ContentLoader';
 
 const pageSize = 4;
 
 export default {
   name: 'Posts',
-  components: {
-    ContentLoader
-  },
   data() {
     return {
       pageNum: 1,
-      showMoreEnabled: true,
       showExcerpt: false
     };
   },
@@ -110,7 +112,6 @@ export default {
         updateQuery: (prevResult, { fetchMoreResult }) => {
           const newPosts = fetchMoreResult.infiniteScrollPosts.posts;
           const hasMore = fetchMoreResult.infiniteScrollPosts.hasMore;
-          this.showMoreEnabled = hasMore;
 
           return {
             infiniteScrollPosts: {

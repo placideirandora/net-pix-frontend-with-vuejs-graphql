@@ -124,8 +124,8 @@ export default {
           description.length >= 100 ||
           'Description cannot be less than 100 characters',
         description =>
-          description.length <= 2000 ||
-          'Description cannot be  greater than 2000 characters'
+          description.length <= 5000 ||
+          'Description cannot be  greater than 5000 characters'
       ],
       imgUrlRules: [imgUrl => !!imgUrl || 'Image URL is required'],
       categoryRules: [
