@@ -15,10 +15,12 @@ export default new Vuex.Store({
     pageError: null,
     formError: null,
     authError: null,
+    darkTheme: false,
     colors: {
       primary: '#004385',
       secondary: '#457EAC',
-      formBackground: '#BFBDBF'
+      backgroundLight: '#BFBDBF',
+      backgroundDark: '#312F2F'
     }
   },
   mutations: {
@@ -42,6 +44,9 @@ export default new Vuex.Store({
     },
     setAuthError: (state, payload) => {
       state.authError = payload;
+    },
+    setDarkTheme: (state, payload) => {
+      state.darkTheme = payload;
     },
     clearUser: state => (state.user = null),
     clearPageError: state => (state.pageError = null),
@@ -173,6 +178,7 @@ export default new Vuex.Store({
     authError: state => state.authError,
     pageError: state => state.pageError,
     formError: state => state.formError,
+    darkTheme: state => state.darkTheme,
     userFavorites: state => state.user && state.user.favorites
   },
   modules: {}

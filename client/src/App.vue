@@ -11,6 +11,20 @@
           <router-view />
         </transition>
 
+        <v-layout>
+          <v-spacer />
+          <div class="app__theme">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn fab v-on="on" @click="toggleTheme">
+                  <v-icon>mdi-brightness-6</v-icon>
+                </v-btn>
+              </template>
+              <span>{{ !darkTheme ? 'Switch to Dark Theme' : 'Switch to Light Theme' }}</span>
+            </v-tooltip>
+          </div>
+        </v-layout>
+
         <Notification
           :message="notification"
           :messageType="type"
@@ -62,8 +76,8 @@ export default {
   data() {
     return {
       sideNav: false,
-      authErrorSnackbarIn: false,
-      authErrorSnackbarOut: false,
+      authSnackbarIn: false,
+      authSnackbarOut: false,
       postSnackbar: false,
       notification: null,
       type: null,
@@ -150,6 +164,9 @@ export default {
         { icon: 'lock_open', title: 'Sign In', link: '/signin' },
         { icon: 'create', title: 'Sign Up', link: '/signup' }
       ];
+    },
+    darkTheme() {
+      return this.$vuetify.theme.dark;
     }
   },
   methods: {
@@ -159,6 +176,16 @@ export default {
     },
     handleSignoutUser() {
       this.$store.dispatch('signoutUser');
+    },
+    toggleTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      if (this.$vuetify.theme.dark) {
+        this.$store.commit('setDarkTheme', true);
+        localStorage.setItem('theme', 'dark');
+      } else {
+        this.$store.commit('setDarkTheme', false);
+        localStorage.setItem('theme', 'light');
+      }
     }
   }
 };
@@ -168,6 +195,12 @@ export default {
 .app {
   &__router {
     cursor: pointer;
+  }
+
+  &__theme {
+    position: fixed;
+    bottom: 10%;
+    right: 2.5%;
   }
 
   &__bounce {

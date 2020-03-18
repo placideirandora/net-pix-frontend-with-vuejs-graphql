@@ -22,5 +22,14 @@ new Vue({
   render: h => h(App),
   created() {
     this.$store.dispatch('getCurrentUser');
+    const theme = localStorage.getItem('theme');
+
+    if (theme === 'dark') {
+      this.$vuetify.theme.dark = true;
+      this.$store.commit('setDarkTheme', true);
+    } else {
+      this.$vuetify.theme.dark = false;
+      this.$store.commit('setDarkTheme', false);
+    }
   }
 }).$mount('#app');

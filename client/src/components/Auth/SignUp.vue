@@ -19,7 +19,11 @@
 
     <v-row>
       <v-col sm="10" md="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
-        <v-card width="750" class="mx-auto" :color="colors.formBackground">
+        <v-card
+          width="750"
+          class="mx-auto"
+          :color="!darkTheme ? colors.backgroundLight : colors.backgroundDark"
+        >
           <v-card-text>
             <v-form v-model="isFormValid" lazy-validation ref="form">
               <v-text-field
@@ -145,7 +149,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['colors', 'loading', 'user', 'formError']),
+    ...mapGetters(['colors', 'loading', 'user', 'formError', 'darkTheme']),
     breakPoint() {
       return this.$vuetify.breakpoint;
     }

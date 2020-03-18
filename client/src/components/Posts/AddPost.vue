@@ -12,7 +12,11 @@
     </v-row>
     <v-row>
       <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
-        <v-card width="750" class="mx-auto">
+        <v-card
+          width="750"
+          class="mx-auto"
+          :color="!darkTheme ? colors.backgroundLight : colors.backgroundDark"
+        >
           <v-card-text>
             <v-form v-model="isFormValid" lazy-validation ref="form">
               <v-text-field
@@ -70,9 +74,10 @@
           <v-divider />
           <v-card-actions>
             <v-btn
+              dark
               class="ma-2"
               :color="colors.secondary"
-              dark
+              :disabled="!isFormValid"
               :loading="loading"
               @click="handlePublishPost"
             >
@@ -136,7 +141,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['user', 'colors', 'loading', 'formError']),
+    ...mapGetters(['user', 'colors', 'loading', 'formError', 'darkTheme']),
     breakPoint() {
       return this.$vuetify.breakpoint;
     }

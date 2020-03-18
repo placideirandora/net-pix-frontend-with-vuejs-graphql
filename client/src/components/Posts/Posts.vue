@@ -38,7 +38,7 @@
             </v-btn>
           </v-card-actions>
           <v-menu-transition transition="slide-y-transition" v-if="showExcerpt">
-            <v-card-text class="grey lighten-4">
+            <v-card-text :class="!darkTheme ? 'grey lighten-4' : null">
               <v-list-item>
                 <v-list-item-avatar>
                   <v-img :src="post.createdBy.avatar" alt="Author Avatar" />
@@ -87,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['colors']),
+    ...mapGetters(['colors', 'darkTheme']),
     breakPoint() {
       return this.$vuetify.breakpoint;
     }
