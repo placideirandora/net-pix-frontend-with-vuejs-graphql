@@ -201,6 +201,7 @@ export default {
     position: fixed;
     bottom: 10%;
     right: 2.5%;
+    z-index: 1;
   }
 
   &__bounce {

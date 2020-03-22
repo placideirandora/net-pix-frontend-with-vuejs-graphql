@@ -31,7 +31,7 @@
                 :rules="usernameRules"
                 label="Username"
                 prepend-icon="mdi-account-circle"
-                :clearable="true"
+                :clearable="breakPoint.xsOnly ? false : true"
                 v-model="username"
                 autocomplete="off"
               />
@@ -40,7 +40,7 @@
                 :rules="emailRules"
                 label="Email"
                 prepend-icon="mdi-email"
-                :clearable="true"
+                :clearable="breakPoint.xsOnly ? false : true"
                 v-model="email"
                 autocomplete="off"
               />
@@ -51,7 +51,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 prepend-icon="mdi-lock"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :clearable="true"
+                :clearable="breakPoint.xsOnly ? false : true"
                 @click:append="showPassword = !showPassword"
                 v-model="password"
               />
@@ -62,7 +62,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 prepend-icon="mdi-gavel"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :clearable="true"
+                :clearable="breakPoint.xsOnly ? false : true"
                 @click:append="handleShowPassword"
                 v-model="passwordConfirmation"
               />
@@ -91,10 +91,17 @@
               <router-link
                 to="/signin"
                 tag="span"
-                class="app__router mr-2"
+                class="app__router mr-2 hidden-xs-only"
               >Already Have An Account? Sign In</router-link>
             </v-container>
           </v-card-actions>
+          <v-layout v-if="breakPoint.xsOnly">
+            <router-link
+              to="/signin"
+              tag="span"
+              class="caption ml-4 mb-3"
+            >Already Have An Account? Sign In</router-link>
+          </v-layout>
         </v-card>
       </v-col>
     </v-row>

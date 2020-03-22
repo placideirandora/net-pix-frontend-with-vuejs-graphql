@@ -2,7 +2,7 @@
   <v-app-bar app dark :color="colors.primary">
     <v-app-bar-nav-icon class="ml-1 mr-4" />
     <!-- Implement The Navigation Drawer -->
-    <v-toolbar-title class="hidden-xs-only title">
+    <v-toolbar-title :class="breakPoint.smAndDown ? 'title app__title--center' : 'title'">
       <router-link to="/" tag="span" class="app__router">NETPIX</router-link>
     </v-toolbar-title>
     <v-spacer />
@@ -12,7 +12,7 @@
       placeholder="SEARCH POSTS"
       single-line
       high-details
-      class="mt-4"
+      :class="breakPoint.smAndDown ? 'hidden-xs-only hidden-sm-only' : 'mt-4'"
       clearable
     />
     <v-spacer />
@@ -58,7 +58,20 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['colors', 'user', 'userFavorites'])
+    ...mapGetters(['colors', 'user', 'userFavorites']),
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
   }
 };
 </script>
+
+<style lang="scss">
+  .app {
+    &__title {
+      &--center {
+        margin-left: calc(100% - 19rem);
+      }
+    }
+  }
+</style>

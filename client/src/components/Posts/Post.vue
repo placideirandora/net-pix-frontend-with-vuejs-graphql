@@ -9,7 +9,7 @@
       <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
         <v-layout>
           <h1 v-if="!breakPoint.xsOnly">{{ getPost.title.toUpperCase() }}</h1>
-          <h2 v-if="breakPoint.xsOnly">{{ getPost.title.toUpperCase() }}</h2>
+          <h3 v-if="breakPoint.xsOnly">{{ getPost.title.toUpperCase() }}</h3>
           <v-spacer />
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">

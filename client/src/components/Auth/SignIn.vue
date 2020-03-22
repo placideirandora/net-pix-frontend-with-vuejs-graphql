@@ -31,7 +31,7 @@
                 :rules="usernameRules"
                 label="Username"
                 prepend-icon="mdi-account-circle"
-                :clearable="true"
+                :clearable="breakPoint.xsOnly ? false : true"
                 v-model="username"
                 @input="hideMessage"
                 autocomplete="off"
@@ -43,7 +43,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 prepend-icon="mdi-lock"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :clearable="true"
+                :clearable="breakPoint.xsOnly ? false : true"
                 @click:append="handleShowPassword"
                 v-model="password"
                 @input="hideMessage"
@@ -72,9 +72,16 @@
             <router-link
               to="/signup"
               tag="span"
-              class="app__router mr-2 caption"
+              class="app__router mr-2 caption hidden-xs-only"
             >Don't Have An Account? Sign Up</router-link>
           </v-card-actions>
+          <v-layout v-if="breakPoint.xsOnly">
+            <router-link
+              to="/signup"
+              tag="span"
+              class="caption ml-4 mb-3"
+            >Don't Have An Account? Sign Up</router-link>
+          </v-layout>
         </v-card>
       </v-col>
     </v-row>

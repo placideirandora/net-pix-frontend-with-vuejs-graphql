@@ -14,15 +14,21 @@
 
     <v-row v-else-if="!loading && posts.length > 0">
       <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
-        <v-carousel v-bind="{ 'cycle': true }" interval="5000">
+        <v-carousel
+          v-bind="{ 'cycle': true }"
+          interval="5000"
+          :hide-delimiters="breakPoint.smAndDown ? true : null"
+          :show-arrows="breakPoint.xsOnly ? false : true"
+        >
           <v-carousel-item
             v-for="post in posts"
             :key="post._id"
             :src="post.imageUrl"
             @click.native="goToPost(post._id)"
+            :max-height="breakPoint.smAndDown ? '45vh' : null"
           >
             <h1 class="home__title" v-if="!breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h1>
-            <h2 class="home__title" v-if="breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h2>
+            <h5 class="home__title mb-4" v-if="breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h5>
           </v-carousel-item>
         </v-carousel>
       </v-col>

@@ -4,8 +4,9 @@
       <v-col md="6" sm="10" class="mx-auto">
         <v-snackbar top center :color="messageType" :timeout="duration" v-model="display">
           <v-icon class="mr-3" color="white">{{ icon }}</v-icon>
-          <h4>{{ message }}</h4>
-          <v-btn @click="closeMessage">Close</v-btn>
+          <h4 v-if="!breakPoint.xsOnly">{{ message }}</h4>
+          <h5 v-if="breakPoint.xsOnly">{{ message }}</h5>
+          <v-btn @click="closeMessage" :small="breakPoint.xsOnly ? true : false">Close</v-btn>
         </v-snackbar>
       </v-col>
     </v-row>
@@ -36,12 +37,17 @@ export default {
   data() {
     return {
       display: true
-    }
+    };
   },
   methods: {
     closeMessage() {
-      this.display = false
+      this.display = false;
     }
   },
+  computed: {
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
+  }
 };
 </script>
