@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const createToken = require('../helpers/generateToken');
 
 module.exports = {
