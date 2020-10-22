@@ -73,14 +73,13 @@
               to="/signup"
               tag="span"
               class="app__router mr-2 caption hidden-xs-only"
-            >Don't Have An Account? Sign Up</router-link>
+              >Don't Have An Account? Sign Up</router-link
+            >
           </v-card-actions>
           <v-layout v-if="breakPoint.xsOnly">
-            <router-link
-              to="/signup"
-              tag="span"
-              class="caption ml-4 mb-3"
-            >Don't Have An Account? Sign Up</router-link>
+            <router-link to="/signup" tag="span" class="caption ml-4 mb-3"
+              >Don't Have An Account? Sign Up</router-link
+            >
           </v-layout>
         </v-card>
       </v-col>

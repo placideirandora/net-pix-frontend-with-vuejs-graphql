@@ -20,7 +20,9 @@
                   <v-icon>mdi-brightness-6</v-icon>
                 </v-btn>
               </template>
-              <span>{{ !darkTheme ? 'Switch to Dark Theme' : 'Switch to Light Theme' }}</span>
+              <span>{{
+                !darkTheme ? 'Switch to Dark Theme' : 'Switch to Light Theme'
+              }}</span>
             </v-tooltip>
           </div>
         </v-layout>
