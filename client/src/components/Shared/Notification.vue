@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col md="6" sm="10" class="mx-auto">
-        <v-snackbar top center :color="messageType" :timeout="duration" v-model="display">
+        <v-snackbar bottom center :color="messageType" :timeout="duration" v-model="display">
           <v-icon class="mr-3" color="white">{{ icon }}</v-icon>
           <h4 v-if="!breakPoint.xsOnly">{{ message }}</h4>
           <h5 v-if="breakPoint.xsOnly">{{ message }}</h5>
