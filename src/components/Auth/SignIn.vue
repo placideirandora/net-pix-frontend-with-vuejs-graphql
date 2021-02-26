@@ -5,7 +5,7 @@
         <img
           src="../../assets/welcome.svg"
           alt="authentication"
-          :width="breakPoint.smAndDown ? 250 : 300"
+          :width="breakPoint.smAndDown ? 250 : 500"
           height="200"
         />
       </v-col>
@@ -33,7 +33,6 @@
                 prepend-icon="mdi-account-circle"
                 :clearable="breakPoint.xsOnly ? false : true"
                 v-model="username"
-                @input="hideMessage"
                 autocomplete="off"
               />
               <v-text-field
@@ -44,9 +43,8 @@
                 prepend-icon="mdi-lock"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :clearable="breakPoint.xsOnly ? false : true"
-                @click:append="handleShowPassword"
+                @click:append="onToggleShowPassword"
                 v-model="password"
-                @input="hideMessage"
               />
             </v-form>
           </v-card-text>
@@ -58,9 +56,9 @@
               dark
               :loading="loading"
               :disabled="!isFormValid"
-              @click="handleSigninUser"
+              @click="onSignUserIn"
             >
-              Continue
+              Sign In
               <template v-slot:loader>
                 <span class="custom-loader">
                   <v-icon light>cached</v-icon>
@@ -84,18 +82,11 @@
         </v-card>
       </v-col>
     </v-row>
-    <Notification
-      :message="formError"
-      messageType="error"
-      color="error"
-      v-if="formError && showMessage"
-      icon="mdi-alert-circle"
-    />
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'SignIn',
@@ -103,57 +94,59 @@ export default {
     return {
       username: '',
       password: '',
-      showMessage: false,
       showPassword: false,
       usernameRules: [
-        username => !!username || 'Username is required',
-        username =>
+        (username) => !!username || 'Username is required',
+        (username) =>
           (username.length >= 4 && username.length <= 20) ||
-          'Username cannot be less than 4 characters'
+          'Username cannot be less than 4 characters',
       ],
       passwordRules: [
-        password => !!password || 'Password is required',
-        password =>
-          password.length >= 6 || 'Password must be at least 6 characters'
+        (password) => !!password || 'Password is required',
+        (password) =>
+          password.length >= 6 || 'Password must be at least 6 characters',
       ],
-      isFormValid: true
+      isFormValid: true,
+      signedIn: false,
     };
   },
   computed: {
     ...mapGetters(['colors', 'loading', 'user', 'formError', 'darkTheme']),
     breakPoint() {
       return this.$vuetify.breakpoint;
-    }
+    },
   },
   watch: {
     user() {
       this.$router.push({ name: 'Home' });
-    }
+    },
   },
   methods: {
-    handleSigninUser() {
+    ...mapActions(['signinUser', 'getCurrentUser']),
+    onSignUserIn() {
       if (this.$refs.form.validate()) {
         const credentials = {
           username: this.username,
-          password: this.password
+          password: this.password,
         };
-        this.$store.dispatch('signinUser', credentials);
-        this.showMessage = true;
+
+        this.signinUser(credentials)
+          .then((res) => {
+            if (res) {
+              this.$toast.success('Signed In');
+              this.getCurrentUser();
+              this.$router.push({ name: 'Home' });
+            }
+          })
+          .catch(({ message }) => {
+            this.$toast.error(message.slice(15));
+          });
       }
     },
-    hideMessage() {
-      this.showMessage = false;
-    },
-    handleShowPassword() {
+    onToggleShowPassword() {
       this.showPassword = !this.showPassword;
-      this.hideMessage();
-    }
+    },
   },
-  mounted() {
-    if (this.formError) {
-      this.$store.commit('clearFormError', null);
-    }
-  }
 };
 </script>
 

@@ -5,7 +5,7 @@
         <img
           src="../../assets/get-started.svg"
           alt="authentication"
-          :width="breakPoint.smAndDown ? 250 : 300"
+          :width="breakPoint.smAndDown ? 250 : 500"
           height="200"
         />
       </v-col>
@@ -63,7 +63,7 @@
                 prepend-icon="mdi-gavel"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :clearable="breakPoint.xsOnly ? false : true"
-                @click:append="handleShowPassword"
+                @click:append="onToggleShowPassword"
                 v-model="passwordConfirmation"
               />
             </v-form>
@@ -76,9 +76,9 @@
               dark
               :loading="loading"
               :disabled="!isFormValid"
-              @click="handleSignupUser"
+              @click="onSignUserUp"
             >
-              Continue
+              Sign Up
               <template v-slot:loader>
                 <span class="custom-loader">
                   <v-icon light>cached</v-icon>
@@ -92,32 +92,23 @@
                 to="/signin"
                 tag="span"
                 class="app__router mr-2 hidden-xs-only"
-              >Already Have An Account? Sign In</router-link>
+                >Already Have An Account? Sign In</router-link
+              >
             </v-container>
           </v-card-actions>
           <v-layout v-if="breakPoint.xsOnly">
-            <router-link
-              to="/signin"
-              tag="span"
-              class="caption ml-4 mb-3"
-            >Already Have An Account? Sign In</router-link>
+            <router-link to="/signin" tag="span" class="caption ml-4 mb-3"
+              >Already Have An Account? Sign In</router-link
+            >
           </v-layout>
         </v-card>
       </v-col>
     </v-row>
-    <Notification
-      :message="formError"
-      messageType="warning"
-      color="error"
-      v-if="formError && showMessage"
-      icon="mdi-alert"
-      :duration="5000"
-    />
   </v-container>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'SignUp',
@@ -127,70 +118,72 @@ export default {
       email: '',
       password: '',
       passwordConfirmation: '',
-      showMessage: false,
       showPassword: false,
       usernameRules: [
-        username => !!username || 'Username is required',
-        username =>
+        (username) => !!username || 'Username is required',
+        (username) =>
           (username.length >= 4 && username.length <= 20) ||
-          'Username cannot be less than 4 or greater than 20 characters'
+          'Username cannot be less than 4 or greater than 20 characters',
       ],
       emailRules: [
-        email => !!email || 'Email is required',
-        email =>
+        (email) => !!email || 'Email is required',
+        (email) =>
           /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(email) ||
-          'Email must be valid'
+          'Email must be valid',
       ],
       passwordRules: [
-        password => !!password || 'Password is required',
-        password =>
-          password.length >= 6 || 'Password must be at least 6 characters'
+        (password) => !!password || 'Password is required',
+        (password) =>
+          password.length >= 6 || 'Password must be at least 6 characters',
       ],
       passwordConfRules: [
-        passwordConf => !!passwordConf || 'Password Confirmation is required',
-        passwordConf =>
+        (passwordConf) => !!passwordConf || 'Password Confirmation is required',
+        (passwordConf) =>
           passwordConf.length >= 6 || 'Password must be at least 6 characters',
-        passwordConf => passwordConf === this.password || 'Passwords must match'
+        (passwordConf) =>
+          passwordConf === this.password || 'Passwords must match',
       ],
-      isFormValid: true
+      isFormValid: true,
     };
   },
   computed: {
     ...mapGetters(['colors', 'loading', 'user', 'formError', 'darkTheme']),
     breakPoint() {
       return this.$vuetify.breakpoint;
-    }
+    },
   },
   watch: {
     user() {
       this.$router.push({ name: 'Home' });
-    }
+    },
   },
   methods: {
-    handleSignupUser() {
+    ...mapActions(['signupUser', 'getCurrentUser']),
+    onSignUserUp() {
       if (this.$refs.form.validate()) {
         const credentials = {
           username: this.username,
           email: this.email,
-          password: this.password
+          password: this.password,
         };
-        this.$store.dispatch('signupUser', credentials);
-        this.showMessage = true;
+
+        this.signupUser(credentials)
+          .then((res) => {
+            if (res) {
+              this.$toast.success('Signed Up');
+              this.getCurrentUser();
+              this.$router.push({ name: 'Home' });
+            }
+          })
+          .catch(({ message }) => {
+            this.$toast.error(message.slice(15));
+          });
       }
     },
-    hideMessage() {
-      this.showMessage = false;
-    },
-    handleShowPassword() {
+    onToggleShowPassword() {
       this.showPassword = !this.showPassword;
-      this.hideMessage();
-    }
+    },
   },
-  mounted() {
-    if (this.formError) {
-      this.$store.commit('clearFormError', null);
-    }
-  }
 };
 </script>
 

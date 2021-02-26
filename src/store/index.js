@@ -51,7 +51,6 @@ export default new Vuex.Store({
       }
     },
     getPosts: ({ commit }) => {
-      commit('clearPageError', null);
       commit('setLoading', true);
       apolloClient
         .query({
@@ -67,7 +66,6 @@ export default new Vuex.Store({
         });
     },
     publishPost: ({ commit }, payload) => {
-      commit('clearPageError', null);
       commit('setLoading', true);
       apolloClient
         .mutate({
@@ -96,32 +94,33 @@ export default new Vuex.Store({
         });
     },
     signupUser: ({ commit }, payload) => {
-      commit('clearFormError', null);
-      commit('setLoading', true);
+      return new Promise((resolve, reject) => {
+        commit('setLoading', true);
 
-      apolloClient
-        .mutate({
-          mutation: REGISTER_USER,
-          variables: payload
-        })
-        .then(
-          ({
-            data: {
-              registerUser: { token }
+        apolloClient
+          .mutate({
+            mutation: REGISTER_USER,
+            variables: payload
+          })
+          .then(
+            ({
+              data: {
+                registerUser: { token }
+              }
+            }) => {
+              commit('setLoading', false);
+              onLogin(apolloClient, token);
+              resolve(true);
             }
-          }) => {
+          )
+          .catch(error => {
             commit('setLoading', false);
-            onLogin(apolloClient, token);
-          }
-        )
-        .catch(({ message }) => {
-          commit('setLoading', false);
-          commit('setFormError', message.slice(15));
-        });
+            reject(error);
+          });
+      });
     },
     signinUser: ({ commit }, payload) => {
       return new Promise((resolve, reject) => {
-        commit('clearFormError', null);
         commit('setLoading', true);
         // Prevent malformed token error
         localStorage.setItem('token', '');
