@@ -150,6 +150,7 @@ export default new Vuex.Store({
     signoutUser: ({ commit }) => {
       commit('clearUser');
       onLogout(apolloClient);
+      Vue.$toast.info('Signed Out');
     }
   },
   getters: {
