@@ -2,9 +2,7 @@
   <v-footer>
     <v-row>
       <v-col class="text-center">
-        &copy; {{ new Date().getFullYear() }} --
-        <strong>NETPIX</strong>
-        -- Placide IRANDORA
+        &copy; 2020 - {{ new Date().getFullYear() }} Placide IRANDORA.
       </v-col>
     </v-row>
   </v-footer>
@@ -12,6 +10,6 @@
 
 <script>
 export default {
-  name: 'Footer'
+  name: 'Footer',
 };
 </script>
