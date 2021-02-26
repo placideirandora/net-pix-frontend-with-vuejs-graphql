@@ -1,6 +1,68 @@
 <template>
-  <v-container>
-    <h1>{{ user.username.toUpperCase() }}'S PROFILE</h1>
+  <v-container class="text-xs-center">
+    <!-- User Details Card -->
+    <v-flex sm6 offset-sm3>
+      <v-card class="white--text" color="secondary">
+        <v-layout>
+          <v-flex xs-5 class="pt-5">
+            <v-img height="125px" contain :src="user.avatar"></v-img>
+          </v-flex>
+          <v-flex xs-7>
+            <v-card-title primary-title>
+              <div>
+                <div class="headline">{{ user.username }}</div>
+                <div class="font-weight-regular">
+                  Joined:
+                  {{
+                    new Date(user.joinDate).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })
+                  }}
+                </div>
+                <div class="hidden-xs-only font-weight-regular">
+                  {{ user.favorites.length }} Favorites
+                </div>
+                <div class="hidden-xs-only font-weight-regular">
+                  0 Posts Added
+                </div>
+              </div>
+            </v-card-title>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-flex>
+
+    <!-- Posts Favorited by the User -->
+    <v-layout row wrap v-if="!userFavorites.length" class="mt-5">
+      <v-flex xs-12>
+        <h3 class="text-center">
+          You have no favorites currently. Go and add some.
+        </h3>
+      </v-flex>
+    </v-layout>
+
+    <v-container class="mt-5" v-else>
+      <v-flex xs-12 class="mb-5">
+        <h2 class="font-weight-light text-center">
+          Favorited
+          <span class="font-weight-regular">{{ userFavorites.length }}</span>
+        </h2>
+      </v-flex>
+
+      <v-layout row wrap>
+        <v-flex xs6 v-for="favorite in userFavorites" :key="favorite._id">
+          <v-card class="mt-3 ml-1 mr-2" hover>
+            <v-img height="30vh" :src="favorite.imageUrl"></v-img>
+            <v-card-text>
+              {{ favorite.title }}
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-container>
 </template>
 
@@ -10,7 +72,7 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'Profile',
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'userFavorites']),
   },
 };
 </script>
