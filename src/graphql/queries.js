@@ -80,3 +80,16 @@ export const GET_POST = gql`
     }
   }
 `;
+
+// Search posts
+export const SEARCH_POSTS = gql`
+  query($searchTerm: String) {
+    searchPosts(searchTerm: $searchTerm) {
+      _id
+      title
+      description
+      imageUrl
+      likes
+    }
+  }
+`;
