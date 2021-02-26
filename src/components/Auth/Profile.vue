@@ -1,11 +1,16 @@
 <template>
   <v-container>
-    <h1>PROFILE</h1>
+    <h1>{{ user.username.toUpperCase() }}'S PROFILE</h1>
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
-  name: 'Profile'
+  name: 'Profile',
+  computed: {
+    ...mapGetters(['user']),
+  },
 };
 </script>
