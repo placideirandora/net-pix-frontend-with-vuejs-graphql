@@ -13,9 +13,14 @@
     </v-row>
 
     <v-row v-else-if="!loading && posts.length > 0">
-      <v-col sm="11" md="12" lg="12" :class="breakPoint.smAndDown ? 'mx-auto' : null">
+      <v-col
+        sm="11"
+        md="12"
+        lg="12"
+        :class="breakPoint.smAndDown ? 'mx-auto' : null"
+      >
         <v-carousel
-          v-bind="{ 'cycle': true }"
+          v-bind="{ cycle: true }"
           interval="5000"
           :hide-delimiters="breakPoint.smAndDown ? true : null"
           :show-arrows="breakPoint.xsOnly ? false : true"
@@ -27,8 +32,12 @@
             @click.native="goToPost(post._id)"
             :max-height="breakPoint.smAndDown ? '45vh' : null"
           >
-            <h1 class="home__title" v-if="!breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h1>
-            <h5 class="home__title mb-4" v-if="breakPoint.xsOnly">{{ post.title.toUpperCase() }}</h5>
+            <h1 class="home__title" v-if="!breakPoint.xsOnly">
+              {{ post.title.toUpperCase() }}
+            </h1>
+            <h5 class="home__title mb-4" v-if="breakPoint.xsOnly">
+              {{ post.title.toUpperCase() }}
+            </h5>
           </v-carousel-item>
         </v-carousel>
       </v-col>
@@ -36,7 +45,9 @@
 
     <v-row v-else>
       <v-col>
-        <DataNotFound message="There are currently no published posts to display" />
+        <DataNotFound
+          message="There are currently no published posts to display"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -49,13 +60,13 @@ import ServerError from '../components/Shared/ServerError';
 export default {
   name: 'Home',
   components: {
-    ServerError
+    ServerError,
   },
   computed: {
     ...mapGetters(['loading', 'posts', 'pageError', 'authError']),
     breakPoint() {
       return this.$vuetify.breakpoint;
-    }
+    },
   },
   methods: {
     handleGetCarouselPosts() {
@@ -63,7 +74,7 @@ export default {
     },
     goToPost(id) {
       this.$router.push({ name: 'Post', params: { postId: id } });
-    }
+    },
   },
   created() {
     this.handleGetCarouselPosts();
@@ -72,7 +83,7 @@ export default {
     if (this.authError) {
       this.$store.commit('clearAuthError', null);
     }
-  }
+  },
 };
 </script>
 
