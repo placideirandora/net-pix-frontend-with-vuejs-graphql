@@ -80,7 +80,6 @@ export const createProvider = () => {
 export const onLogin = async (apolloClient, token) => {
   if (typeof localStorage !== 'undefined' && token) {
     localStorage.setItem(AUTH_TOKEN, token);
-    router.go();
   }
   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
   try {

@@ -9,12 +9,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
-    published: false,
     posts: [],
     loading: false,
-    pageError: null,
-    formError: null,
-    authError: null,
     darkTheme: false,
     colors: {
       primary: '#004385',
@@ -27,31 +23,16 @@ export default new Vuex.Store({
     setUser: (state, payload) => {
       state.user = payload;
     },
-    setPublished: (state, payload) => {
-      state.published = payload;
-    },
     setPosts: (state, payload) => {
       state.posts = payload;
     },
     setLoading: (state, payload) => {
       state.loading = payload;
     },
-    setPageError: (state, payload) => {
-      state.pageError = payload;
-    },
-    setFormError: (state, payload) => {
-      state.formError = payload;
-    },
-    setAuthError: (state, payload) => {
-      state.authError = payload;
-    },
     setDarkTheme: (state, payload) => {
       state.darkTheme = payload;
     },
-    clearUser: state => (state.user = null),
-    clearPageError: state => (state.pageError = null),
-    clearFormError: state => (state.formError = null),
-    clearAuthError: state => (state.authError = null)
+    clearUser: state => (state.user = null)
   },
   actions: {
     getCurrentUser: ({ commit }) => {
@@ -139,30 +120,33 @@ export default new Vuex.Store({
         });
     },
     signinUser: ({ commit }, payload) => {
-      commit('clearFormError', null);
-      commit('setLoading', true);
-      // Prevent malformed token error
-      localStorage.setItem('token', '');
+      return new Promise((resolve, reject) => {
+        commit('clearFormError', null);
+        commit('setLoading', true);
+        // Prevent malformed token error
+        localStorage.setItem('token', '');
 
-      apolloClient
-        .mutate({
-          mutation: LOGIN_USER,
-          variables: payload
-        })
-        .then(
-          ({
-            data: {
-              loginUser: { token }
+        apolloClient
+          .mutate({
+            mutation: LOGIN_USER,
+            variables: payload
+          })
+          .then(
+            ({
+              data: {
+                loginUser: { token }
+              }
+            }) => {
+              commit('setLoading', false);
+              onLogin(apolloClient, token);
+              resolve(true);
             }
-          }) => {
+          )
+          .catch(error => {
             commit('setLoading', false);
-            onLogin(apolloClient, token);
-          }
-        )
-        .catch(({ message }) => {
-          commit('setLoading', false);
-          commit('setFormError', message.slice(15));
-        });
+            reject(error);
+          });
+      });
     },
     signoutUser: ({ commit }) => {
       commit('clearUser');
