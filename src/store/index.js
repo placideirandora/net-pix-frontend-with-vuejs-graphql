@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+
 import { apolloClient, onLogin, onLogout } from '../graphql/apolloClient';
-import { GET_POSTS, GET_CURRENT_USER } from '../graphql/queries';
+import { GET_POSTS, GET_CURRENT_USER, SEARCH_POSTS } from '../graphql/queries';
 import { REGISTER_USER, LOGIN_USER, PUBLISH_POST } from '../graphql/mutations';
 
 Vue.use(Vuex);
@@ -10,7 +11,10 @@ export default new Vuex.Store({
   state: {
     user: null,
     posts: [],
+    searchResults: [],
     loading: false,
+    searching: false,
+    postsNotFound: false,
     darkTheme: false,
     colors: {
       primary: '#004385',
@@ -26,13 +30,23 @@ export default new Vuex.Store({
     setPosts: (state, payload) => {
       state.posts = payload;
     },
+    setSearchResults: (state, payload) => {
+      state.searchResults = payload;
+    },
     setLoading: (state, payload) => {
       state.loading = payload;
+    },
+    setSearching: (state, payload) => {
+      state.searching = payload;
+    },
+    setPostsNotFound: (state, payload) => {
+      state.postsNotFound = payload;
     },
     setDarkTheme: (state, payload) => {
       state.darkTheme = payload;
     },
-    clearUser: state => (state.user = null)
+    clearUser: state => (state.user = null),
+    clearSearchResults: state => (state.searchResults = [])
   },
   actions: {
     getCurrentUser: ({ commit }) => {
@@ -92,6 +106,32 @@ export default new Vuex.Store({
           commit('setLoading', false);
           commit('setPageError', message);
         });
+    },
+    searchPosts: ({ commit }, payload) => {
+      commit('clearSearchResults');
+      commit('setSearching', true);
+
+      return new Promise((resolve, reject) => {
+        apolloClient
+          .query({
+            query: SEARCH_POSTS,
+            variables: payload
+          })
+          .then(({ data: { searchPosts } }) => {
+            commit('setSearching', false);
+
+            if (searchPosts.length) {
+              commit('setSearchResults', searchPosts);
+              resolve(searchPosts);
+            } else {
+              commit('setPostsNotFound', true);
+            }
+          })
+          .catch(error => {
+            commit('setSearching', false);
+            reject(error);
+          });
+      });
     },
     signupUser: ({ commit }, payload) => {
       return new Promise((resolve, reject) => {
@@ -158,11 +198,14 @@ export default new Vuex.Store({
     published: state => state.published,
     posts: state => state.posts,
     loading: state => state.loading,
+    searching: state => state.searching,
     colors: state => state.colors,
     authError: state => state.authError,
     pageError: state => state.pageError,
     formError: state => state.formError,
     darkTheme: state => state.darkTheme,
+    searchResults: state => state.searchResults,
+    postsNotFound: state => state.postsNotFound,
     userFavorites: state => state.user && state.user.favorites
   },
   modules: {}

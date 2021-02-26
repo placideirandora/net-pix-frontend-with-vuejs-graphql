@@ -34,6 +34,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+
 import NavBar from './components/Shared/NavBar';
 import Footer from './components/Shared/Footer';
 
