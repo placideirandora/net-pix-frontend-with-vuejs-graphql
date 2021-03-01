@@ -51,6 +51,7 @@ export default new Vuex.Store({
   actions: {
     getCurrentUser: ({ commit }) => {
       const token = localStorage.getItem('token');
+
       if (token) {
         apolloClient
           .query({
@@ -59,8 +60,9 @@ export default new Vuex.Store({
           .then(({ data: { getCurrentUser } }) => {
             commit('setUser', getCurrentUser);
           })
-          .catch(({ message }) => {
-            console.log(message.slice(15));
+          .catch(() => {
+            Vue.$toast.error('Your session has expired. Sign In again.');
+            onLogout(apolloClient);
           });
       }
     },
@@ -74,9 +76,8 @@ export default new Vuex.Store({
           commit('setPosts', getPosts);
           commit('setLoading', false);
         })
-        .catch(({ message }) => {
+        .catch(() => {
           commit('setLoading', false);
-          commit('setPageError', message);
         });
     },
     publishPost: ({ commit }, payload) => {
@@ -104,7 +105,7 @@ export default new Vuex.Store({
         })
         .catch(({ message }) => {
           commit('setLoading', false);
-          commit('setPageError', message);
+          Vue.$toast.error(message);
         });
     },
     searchPosts: ({ commit }, payload) => {

@@ -5,8 +5,8 @@ import {
   createApolloClient,
   restartWebsockets
 } from 'vue-cli-plugin-apollo/graphql-client';
+
 import router from '../router/index';
-import store from '../store';
 
 // Install the vue plugin
 Vue.use(VueApollo);
@@ -19,10 +19,9 @@ const httpEndpoint = 'http://localhost:4000/graphql';
 
 const link = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
-    graphQLErrors.map(({ name, message }) => {
-      console.log(`[GraphQL error]: Name: ${name}, Message: ${message}`);
+    graphQLErrors.map(({ name }) => {
       if (name === 'AuthenticationError') {
-        store.commit('setAuthError', message.slice(25));
+        console.log(`[Authentication error]: ${networkError}`);
       }
     });
 
