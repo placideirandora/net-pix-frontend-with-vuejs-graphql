@@ -2,7 +2,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { apolloClient, onLogin, onLogout } from '../graphql/apolloClient';
-import { GET_POSTS, GET_CURRENT_USER, SEARCH_POSTS } from '../graphql/queries';
+import {
+  GET_POSTS,
+  GET_CURRENT_USER,
+  SEARCH_POSTS,
+  GET_USER_POSTS
+} from '../graphql/queries';
 import { REGISTER_USER, LOGIN_USER, PUBLISH_POST } from '../graphql/mutations';
 
 Vue.use(Vuex);
@@ -11,6 +16,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     posts: [],
+    userPosts: [],
     searchResults: [],
     loading: false,
     searching: false,
@@ -29,6 +35,9 @@ export default new Vuex.Store({
     },
     setPosts: (state, payload) => {
       state.posts = payload;
+    },
+    setUserPosts: (state, payload) => {
+      state.userPosts = payload;
     },
     setSearchResults: (state, payload) => {
       state.searchResults = payload;
@@ -78,6 +87,23 @@ export default new Vuex.Store({
         })
         .catch(() => {
           commit('setLoading', false);
+        });
+    },
+    getUserPosts: ({ commit }, payload) => {
+      apolloClient
+        .query({
+          query: GET_USER_POSTS,
+          variables: payload
+        })
+        .then(({ data: { getUserPosts } }) => {
+          console.log('USER POSTS: ', getUserPosts);
+          
+          if (getUserPosts.length) {
+            commit('setUserPosts', getUserPosts);
+          }
+        })
+        .catch(() => {
+          // commit('setLoading', false);
         });
     },
     publishPost: ({ commit }, payload) => {
@@ -198,6 +224,7 @@ export default new Vuex.Store({
     user: state => state.user,
     published: state => state.published,
     posts: state => state.posts,
+    userPosts: state => state.userPosts,
     loading: state => state.loading,
     searching: state => state.searching,
     colors: state => state.colors,

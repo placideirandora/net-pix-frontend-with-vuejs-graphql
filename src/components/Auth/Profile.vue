@@ -26,7 +26,7 @@
                   {{ user.favorites.length }} Favorites
                 </div>
                 <div class="hidden-xs-only font-weight-regular">
-                  0 Posts Added
+                  {{ userPosts.length }} Posts Added
                 </div>
               </div>
             </v-card-title>
@@ -39,7 +39,7 @@
     <v-layout row wrap v-if="!userFavorites.length" class="mt-5">
       <v-flex xs-12>
         <h3 class="text-center">
-          You have no favorites currently. Go and add some.
+          You have no favorites currently. Go and add some!
         </h3>
       </v-flex>
     </v-layout>
@@ -48,7 +48,7 @@
       <v-flex xs-12 class="mb-5">
         <h2 class="font-weight-light text-center">
           Favorited
-          <span class="font-weight-regular">{{ userFavorites.length }}</span>
+          <span class="font-weight-regular">({{ userFavorites.length }})</span>
         </h2>
       </v-flex>
 
@@ -63,6 +63,42 @@
         </v-flex>
       </v-layout>
     </v-container>
+
+    <!-- Posts Created by the User -->
+    <v-container v-if="!userPosts.length">
+      <v-layout row wrap>
+        <v-flex xs12>
+          <h2>You have no posts currently. Go and add some!</h2>
+        </v-flex>
+      </v-layout>
+    </v-container>
+
+    <v-container class="mt-3" v-else>
+      <v-flex xs-12>
+        <h2 class="font-weight-light">
+          Your Posts
+          <span class="font-weight-regular">({{ userPosts.length }})</span>
+        </h2>
+      </v-flex>
+
+      <v-layout row wrap>
+        <v-flex xs12 sm6 v-for="post in userPosts" :key="post._id">
+          <v-card class="mt-3 ml-1 mr-2" hover>
+            <div class="px-4 py-4">
+              <v-btn color="info" floating fab small dark class="mr-5">
+                <v-icon>edit</v-icon>
+              </v-btn>
+              <v-btn color="error" floating fab small dark>
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </div>
+
+            <v-img height="30vh" :src="post.imageUrl"></v-img>
+            <v-card-text>{{ post.title }}</v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-container>
 </template>
 
@@ -72,7 +108,15 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'Profile',
   computed: {
-    ...mapGetters(['user', 'userFavorites']),
+    ...mapGetters(['user', 'userPosts', 'userFavorites']),
+  },
+  methods: {
+    getUserPosts() {
+      this.$store.dispatch('getUserPosts', { userId: this.user._id });
+    },
+  },
+  created() {
+    this.getUserPosts();
   },
 };
 </script>

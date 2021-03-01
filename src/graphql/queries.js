@@ -30,6 +30,21 @@ export const GET_POSTS = gql`
   }
 `;
 
+// Retrieve user posts
+export const GET_USER_POSTS = gql`
+  query($userId: ID!) {
+    getUserPosts(userId: $userId) {
+      _id
+      title
+      description
+      imageUrl
+      categories
+      likes
+      createdDate
+    }
+  }
+`;
+
 // Retrieve posts gradually
 export const INFINITE_SCROLL_POSTS = gql`
   query($pageNum: Int!, $pageSize: Int!) {
