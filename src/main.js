@@ -13,7 +13,7 @@ import DataNotFound from '../src/components/Shared/DataNotFound';
 import ContentLoader from '../src/components/Shared/ContentLoader';
 
 const options = {
-  position: 'top-right',
+  position: 'bottom-center',
   timeout: 5000,
   closeOnClick: true,
   pauseOnFocusLoss: true,
