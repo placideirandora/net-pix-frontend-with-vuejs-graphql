@@ -12,7 +12,8 @@ import router from '../router/index';
 Vue.use(VueApollo);
 
 // Name of the localStorage item
-const AUTH_TOKEN = 'token';
+const AUTH_TOKEN = 'netPixAuthToken';
+const AUTH_USER_ID = 'netPixUserId';
 
 // Http endpoint
 const httpEndpoint = 'http://localhost:4000/graphql';
@@ -37,7 +38,7 @@ const defaultOptions = {
     credentials: 'include'
   },
   request: operation => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('netPixAuthToken');
     operation.setContext({
       headers: {
         authorization: token ? token : ''
@@ -76,11 +77,14 @@ export const createProvider = () => {
 };
 
 // Manually call this when user log in
-export const onLogin = async (apolloClient, token) => {
+export const onLogin = async (apolloClient, token, userId) => {
   if (typeof localStorage !== 'undefined' && token) {
     localStorage.setItem(AUTH_TOKEN, token);
+    localStorage.setItem(AUTH_USER_ID, userId);
   }
+
   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
+
   try {
     await apolloClient.resetStore();
   } catch (e) {
@@ -93,8 +97,11 @@ export const onLogin = async (apolloClient, token) => {
 export const onLogout = async apolloClient => {
   if (typeof localStorage !== 'undefined') {
     localStorage.removeItem(AUTH_TOKEN);
+    localStorage.removeItem(AUTH_USER_ID);
   }
+
   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient);
+
   try {
     await apolloClient.resetStore();
     const {

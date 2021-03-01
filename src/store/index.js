@@ -22,6 +22,7 @@ export default new Vuex.Store({
     searching: false,
     postsNotFound: false,
     darkTheme: false,
+    loadingProfile: false,
     colors: {
       primary: '#004385',
       secondary: '#457EAC',
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     setPostsNotFound: (state, payload) => {
       state.postsNotFound = payload;
     },
+    setLoadingProfile: (state, payload) => {
+      state.loadingProfile = payload;
+    },
     setDarkTheme: (state, payload) => {
       state.darkTheme = payload;
     },
@@ -59,7 +63,8 @@ export default new Vuex.Store({
   },
   actions: {
     getCurrentUser: ({ commit }) => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('netPixAuthToken');
+      commit('setLoadingProfile', true);
 
       if (token) {
         apolloClient
@@ -68,8 +73,10 @@ export default new Vuex.Store({
           })
           .then(({ data: { getCurrentUser } }) => {
             commit('setUser', getCurrentUser);
+            commit('setLoadingProfile', false);
           })
           .catch(() => {
+            commit('setLoadingProfile', false);
             Vue.$toast.error('Your session has expired. Sign In again.');
             onLogout(apolloClient);
           });
@@ -96,8 +103,6 @@ export default new Vuex.Store({
           variables: payload
         })
         .then(({ data: { getUserPosts } }) => {
-          console.log('USER POSTS: ', getUserPosts);
-          
           if (getUserPosts.length) {
             commit('setUserPosts', getUserPosts);
           }
@@ -172,11 +177,11 @@ export default new Vuex.Store({
           .then(
             ({
               data: {
-                registerUser: { token }
+                registerUser: { token, userId }
               }
             }) => {
               commit('setLoading', false);
-              onLogin(apolloClient, token);
+              onLogin(apolloClient, token, userId);
               resolve(true);
             }
           )
@@ -189,8 +194,6 @@ export default new Vuex.Store({
     signinUser: ({ commit }, payload) => {
       return new Promise((resolve, reject) => {
         commit('setLoading', true);
-        // Prevent malformed token error
-        localStorage.setItem('token', '');
 
         apolloClient
           .mutate({
@@ -200,11 +203,11 @@ export default new Vuex.Store({
           .then(
             ({
               data: {
-                loginUser: { token }
+                loginUser: { token, userId }
               }
             }) => {
               commit('setLoading', false);
-              onLogin(apolloClient, token);
+              onLogin(apolloClient, token, userId);
               resolve(true);
             }
           )
@@ -233,6 +236,7 @@ export default new Vuex.Store({
     formError: state => state.formError,
     darkTheme: state => state.darkTheme,
     searchResults: state => state.searchResults,
+    loadingProfile: state => state.loadingProfile,
     postsNotFound: state => state.postsNotFound,
     userFavorites: state => state.user && state.user.favorites
   },

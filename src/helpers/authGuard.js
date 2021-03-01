@@ -1,7 +1,7 @@
-import store from '../store/index';
-
 export default (to, from, next) => {
-  if (!store.getters.user) {
+  const token = localStorage.getItem('netPixAuthToken');
+
+  if (!token) {
     next({
       name: 'SignIn'
     });
