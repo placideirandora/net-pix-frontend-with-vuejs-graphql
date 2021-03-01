@@ -172,7 +172,7 @@ export default {
             if (res) {
               this.$toast.success('Signed Up');
               this.getCurrentUser();
-              this.$router.push({ name: 'Home' });
+              this.$router.push({ name: 'Profile' });
             }
           })
           .catch(({ message }) => {
